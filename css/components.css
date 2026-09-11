@@ -3153,8 +3153,53 @@
   background: #F9FAFB;
 }
 
+/* ==========================================================================
+   Responsive Helper Grid & Filter Classes
+   ========================================================================== */
+.dashboard-charts-grid,
+.reports-charts-grid,
+.settings-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
 
+.debt-metrics-grid,
+.product-metrics-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
 
+.filter-controls-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
 
+.filter-search-col {
+  flex: 1 1 240px;
+  min-width: 200px;
+  position: relative;
+}
 
+.filter-select-col {
+  width: 160px;
+  flex: 0 0 auto;
+}
 
+.filter-btn-col {
+  flex: 0 0 auto;
+}
+
+.debt-tab-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.report-statement-table td {
+  word-break: break-word;
+}
