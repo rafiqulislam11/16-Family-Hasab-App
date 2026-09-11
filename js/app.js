@@ -4219,7 +4219,7 @@ const App = {
         </div>
 
         <!-- Signatures Footer with Official Rubber Seal -->
-        <div class="a4-signatures-footer" style="position: relative; margin-top: 1.8rem;">
+        <div class="a4-signatures-footer" style="position: relative;">
           <div class="a4-sign-block">
             <div class="a4-sign-line">গ্রাহক / কাস্টমারের স্বাক্ষর</div>
           </div>
@@ -4230,7 +4230,7 @@ const App = {
               <div style="font-size: 6.5pt; color: #059669; font-weight: 700;">✓ অনুমোদিত</div>
             </div>
           </div>
-          <div class="a4-sign-block" style="text-align: right; position: relative; min-height: 85px; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div class="a4-sign-block" style="text-align: right; position: relative; min-height: 65px; display: flex; flex-direction: column; justify-content: flex-end;">
             ${sealMarkup}
             <div class="proprietor-signature-facsimile">
               ${ownerName}
@@ -4923,11 +4923,12 @@ const App = {
       html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, logging: false },
       jsPDF: { unit: 'mm', format: [80, 220], orientation: 'portrait' }
     } : {
-      margin: [8, 10, 8, 10],
+      margin: [5, 8, 5, 8],
       filename: filename,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {

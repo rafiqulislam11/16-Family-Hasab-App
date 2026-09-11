@@ -10,12 +10,12 @@
 /* Screen Preview for A4 Customer Memo Sheet */
 .a4-memo-sheet {
   width: 210mm;
-  min-height: 280mm;
+  min-height: auto;
   max-width: 100%;
   box-sizing: border-box;
   background: #FFFFFF;
   color: #111827;
-  padding: 12mm 15mm;
+  padding: 8mm 12mm 6mm;
   margin: 0 auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   border-radius: 4px;
@@ -28,19 +28,19 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .a4-shop-brand-left {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .a4-shop-logo-badge {
-  width: 56px;
-  height: 56px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
   background: #FFFFFF;
   border: 1.5px solid #059669;
   display: flex;
@@ -56,58 +56,58 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .a4-shop-name {
-  font-size: 20pt;
+  font-size: 17pt;
   font-weight: 800;
   color: #0F5132;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .a4-shop-tagline {
-  font-size: 9.5pt;
+  font-size: 8.5pt;
   color: #4B5563;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .a4-shop-owner {
-  font-size: 10pt;
+  font-size: 9pt;
   color: #1F2937;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .a4-shop-contact-right {
   text-align: right;
-  font-size: 9.5pt;
+  font-size: 8.5pt;
   color: #4B5563;
-  line-height: 1.45;
+  line-height: 1.35;
 }
 
 .a4-app-brand-badge {
   display: inline-block;
-  margin-top: 4px;
+  margin-top: 2px;
   background: #FEF3C7;
   color: #92400E;
   font-weight: 700;
-  font-size: 8pt;
-  padding: 2px 8px;
+  font-size: 7.5pt;
+  padding: 1px 7px;
   border-radius: 12px;
   border: 1px solid #FDE68A;
 }
 
 .a4-header-rule {
-  height: 3px;
+  height: 2.5px;
   background: linear-gradient(90deg, #0F5132 0%, #059669 60%, #D4AF37 100%);
-  margin: 10px 0 14px;
+  margin: 6px 0 8px;
   border-radius: 2px;
 }
 
 .a4-memo-title-banner {
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 
 .a4-memo-title-banner span {
@@ -116,8 +116,8 @@
   border: 1.5px solid #059669;
   color: #065F46;
   font-weight: 800;
-  font-size: 12.5pt;
-  padding: 4px 22px;
+  font-size: 11pt;
+  padding: 2px 18px;
   border-radius: 20px;
   letter-spacing: 0.5px;
 }
@@ -125,45 +125,45 @@
 .a4-meta-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .a4-meta-col {
   border: 1px solid #E5E7EB;
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 5px 10px;
   background: #FAF8F5;
-  font-size: 9.5pt;
+  font-size: 8.5pt;
 }
 
 .a4-box-title {
-  font-size: 9pt;
+  font-size: 8.5pt;
   font-weight: 700;
   color: #0F5132;
   border-bottom: 1px dashed #CBD5E1;
-  padding-bottom: 4px;
-  margin-bottom: 6px;
+  padding-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 .a4-meta-row {
   display: flex;
   justify-content: space-between;
-  padding: 2px 0;
+  padding: 1px 0;
   color: #374151;
 }
 
 .a4-memo-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 
 .a4-memo-table th,
 .a4-memo-table td {
   border: 1px solid #D1D5DB;
-  padding: 6.5px 8px;
-  font-size: 9.5pt;
+  padding: 4px 7px;
+  font-size: 8.5pt;
 }
 
 .a4-memo-table th {
@@ -184,11 +184,11 @@
   display: inline-block;
   background: #B45309;
   color: #FFFFFF !important;
-  font-size: 7.5pt;
+  font-size: 7pt;
   font-weight: 700;
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 4px;
-  margin-right: 5px;
+  margin-right: 4px;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -196,31 +196,31 @@
 .a4-financials-container {
   display: grid;
   grid-template-columns: 1.25fr 1fr;
-  gap: 16px;
+  gap: 10px;
   align-items: start;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .a4-in-words-box {
   border: 1px solid #E5E7EB;
   border-radius: 6px;
-  padding: 10px 12px;
+  padding: 6px 10px;
   background: #FAFAFA;
 }
 
 .a4-terms-box {
-  margin-top: 10px;
+  margin-top: 4px;
   border-top: 1px dashed #E2E8F0;
-  padding-top: 6px;
-  font-size: 8.5pt;
+  padding-top: 4px;
+  font-size: 7.5pt;
   color: #64748B;
-  line-height: 1.5;
+  line-height: 1.35;
 }
 
 .a4-summary-card {
   border: 1.5px solid #059669;
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 6px 10px;
   background: #F0FDF4;
 }
 
@@ -228,16 +228,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10.5pt;
-  padding: 4px 0;
+  font-size: 9.5pt;
+  padding: 2px 0;
   color: #1F2937;
 }
 
 .a4-summary-due-highlight {
   border-top: 2px dashed #059669;
-  margin-top: 6px;
-  padding-top: 8px;
-  font-size: 12pt;
+  margin-top: 4px;
+  padding-top: 5px;
+  font-size: 11pt;
   font-weight: 800;
   color: #991B1B;
 }
@@ -246,26 +246,26 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-top: 36px;
-  padding: 0 10px;
+  margin-top: 12px;
+  padding: 0 8px;
 }
 
 .a4-sign-block {
-  width: 190px;
+  width: 170px;
 }
 
 .a4-sign-line {
   border-top: 1.5px dashed #4B5563;
-  padding-top: 6px;
-  font-size: 9.5pt;
+  padding-top: 4px;
+  font-size: 8.5pt;
   font-weight: 700;
   text-align: center;
   color: #374151;
 }
 
 .a4-digital-stamp {
-  width: 68px;
-  height: 68px;
+  width: 58px;
+  height: 58px;
   border: 2px dashed #059669;
   border-radius: 50%;
   display: flex;
@@ -277,28 +277,34 @@
 }
 
 .a4-bottom-note {
-  margin-top: 25px;
+  margin-top: 8px;
   text-align: center;
-  font-size: 8pt;
+  font-size: 7.5pt;
   color: #9CA3AF;
   border-top: 1px solid #F3F4F6;
-  padding-top: 6px;
+  padding-top: 4px;
 }
 
 /* ==========================================================================
-   Print Rules
+   Print Rules — Strictly Fits on 1 Page A4
    ========================================================================== */
 
 @media print {
   @page {
-    margin: 10mm 12mm;
+    margin: 5mm 8mm 5mm 8mm;
     size: A4 portrait;
   }
 
-  body {
+  html, body {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
     background: #FFFFFF !important;
     color: #000000 !important;
-    font-size: 11pt;
+    font-size: 10pt;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* Hide entire application shell and dialog chrome */
@@ -323,7 +329,15 @@
     display: block !important;
     background: #FFFFFF !important;
     padding: 0 !important;
-    overflow: visible !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    max-height: 286mm !important;
   }
 
   #customerMemoModal.active .modal-dialog {
@@ -335,23 +349,67 @@
     box-shadow: none !important;
     background: transparent !important;
     transform: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    max-height: 286mm !important;
   }
 
   #customerMemoModal.active .modal-body {
     background: #FFFFFF !important;
     padding: 0 !important;
-    overflow: visible !important;
-    max-height: none !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    max-height: 286mm !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
 
-  .a4-memo-sheet {
+  .a4-memo-sheet,
+  .a4-memo-container {
     box-shadow: none !important;
     border: none !important;
     width: 100% !important;
     max-width: 100% !important;
     min-height: auto !important;
+    max-height: 286mm !important;
     padding: 0 !important;
     margin: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .a4-memo-table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 6px !important;
+  }
+
+  .a4-financials-container {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 6px !important;
+  }
+
+  .a4-signatures-footer {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-top: 8px !important;
+  }
+
+  .a4-bottom-note {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-top: 6px !important;
   }
 
   #customerMemoModal.active .pos-thermal-sheet {
