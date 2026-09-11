@@ -351,3 +351,28 @@ const KhataCharts = {
 };
 
 window.KhataCharts = KhataCharts;
+
+// Auto-resize and redraw charts on device rotation or browser resize
+(function() {
+  let resizeDebounce = null;
+  function handleResize() {
+    clearTimeout(resizeDebounce);
+    resizeDebounce = setTimeout(() => {
+      if (typeof App !== 'undefined') {
+        const view = App.currentView || 'dashboard';
+        if (view === 'dashboard' && typeof App.renderDashboardTrendChart === 'function') {
+          App.renderDashboardTrendChart();
+        } else if (view === 'reports' && typeof App.renderReportsView === 'function') {
+          App.renderReportsView();
+        } else if (view === 'family' && typeof App.renderFamilyView === 'function') {
+          App.renderFamilyView();
+        }
+      }
+    }, 180);
+  }
+
+  window.addEventListener('resize', handleResize, { passive: true });
+  window.addEventListener('orientationchange', () => {
+    setTimeout(handleResize, 220);
+  }, { passive: true });
+})();

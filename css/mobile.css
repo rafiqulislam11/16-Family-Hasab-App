@@ -1772,6 +1772,68 @@ html, body {
   }
 }
 
+/* --- B2. Laptops & Small Desktops (1025px - 1366px): Topbar Adaptive Fit --- */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .topbar {
+    padding: 0 1.15rem;
+    gap: 0.65rem;
+  }
+
+  .topbar-left {
+    min-width: 0;
+    gap: 0.5rem;
+  }
+
+  .greeting-title {
+    font-size: 0.92rem;
+  }
+
+  .greeting-salute {
+    display: none !important;
+  }
+
+  .greeting-date {
+    display: none !important;
+  }
+
+  .topbar-right {
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .context-switcher-wrap {
+    padding: 2px !important;
+    gap: 2px !important;
+  }
+
+  .context-pill-btn {
+    padding: 0.28rem 0.55rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .topbar-memo-btn {
+    padding: 0.35rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .topbar-add-btn {
+    padding: 0.35rem 0.7rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  .topbar-account-meta #topbarAccountName {
+    max-width: 100px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-account-meta .biz-cat-badge {
+    display: none !important;
+  }
+}
+
 /* --- C. Tablet & Mobile Drawer System (<= 1024px) --- */
 @media (max-width: 1024px) {
   .sidebar {
@@ -2038,6 +2100,63 @@ html, body {
     padding: 0.25rem 0.5rem !important;
     font-size: 0.76rem !important;
   }
+
+  /* Fluid Card Header & Table Search Inputs on Tablets & Mobiles */
+  .card-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.65rem !important;
+    padding: 0.85rem 1rem !important;
+  }
+
+  .card-header > div,
+  .card-header input[type="text"],
+  .card-header .form-control {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Modal Form Inline Grids Auto-Collapse on Mobile (<768px) */
+  .khata-modal div[style*="grid-template-columns: 1fr 1fr"],
+  .khata-modal div[style*="grid-template-columns: 1.2fr 1fr"],
+  .khata-modal div[style*="grid-template-columns: 1fr 1.2fr"],
+  .biz-card-creator-layout div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+
+  .khata-modal .form-row {
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+  }
+
+  .khata-modal .form-row .form-group,
+  .khata-modal .form-row .form-group[style*="width: 170px"],
+  .khata-modal .form-row .form-group[style*="width: 160px"] {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  /* Touch tap targets on table action buttons */
+  .data-table .btn-sm,
+  .khata-table .btn-sm,
+  .action-btns .btn {
+    min-height: 36px !important;
+    min-width: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Table responsive smooth inertia touch scrolling */
+  .table-responsive,
+  .memo-items-table-wrapper {
+    -webkit-overflow-scrolling: touch;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block;
+    position: relative;
+  }
 }
 
 /* --- E. Compact Mobile Phones (360px - 480px) --- */
@@ -2135,6 +2254,59 @@ html, body {
   .offline-status-badge {
     display: none !important;
   }
+
+  /* View & Card padding on standard handsets */
+  .view-container {
+    padding: 0.75rem 0.65rem 1.75rem !important;
+  }
+
+  .card-body {
+    padding: 0.85rem 0.75rem !important;
+  }
+
+  /* Metric cards: 2 columns fluid */
+  .metrics-grid,
+  .metric-grid,
+  .debt-metrics-grid,
+  .product-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  .metric-card {
+    padding: 0.75rem 0.65rem !important;
+  }
+
+  .metric-value {
+    font-size: 1.12rem !important;
+  }
+
+  /* Fast action buttons: 2 columns */
+  .fast-action-buttons-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  .fast-btn-title {
+    font-size: 0.85rem !important;
+  }
+
+  .fast-btn-desc {
+    font-size: 0.65rem !important;
+  }
+
+  /* Modal bottom sheets footer */
+  .modal-footer {
+    flex-direction: column-reverse !important;
+    gap: 0.5rem !important;
+  }
+
+  .modal-footer .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 0.94rem !important;
+    justify-content: center !important;
+  }
 }
 
 /* --- F. Ultra-Small Phones (320px - 360px) --- */
@@ -2173,6 +2345,40 @@ html, body {
     top: -10px !important;
     font-size: 1.6rem !important;
   }
+
+  .metrics-grid,
+  .metric-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+
+  .fast-action-buttons-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+
+  .accounts-overview-strip {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+
+  .pin-lock-card {
+    max-width: 280px !important;
+  }
+
+  .pin-dots-container {
+    margin: 1rem 0 1.25rem !important;
+    gap: 0.65rem !important;
+  }
+
+  .pin-key {
+    height: 48px !important;
+    font-size: 1.25rem !important;
+  }
+
+  .pin-keypad {
+    gap: 0.5rem !important;
+  }
 }
 
 /* --- G. Landscape Mode on Mobiles (height <= 500px) --- */
@@ -2197,5 +2403,24 @@ html, body {
   }
   .topbar {
     height: 46px !important;
+  }
+  .modal-dialog {
+    max-height: 98vh !important;
+  }
+  .modal-body {
+    max-height: calc(98vh - 85px) !important;
+  }
+  .pin-lock-card {
+    padding: 0.5rem !important;
+  }
+  .pin-dots-container {
+    margin: 0.5rem 0 0.75rem !important;
+  }
+  .pin-key {
+    height: 40px !important;
+    font-size: 1.15rem !important;
+  }
+  .pin-keypad {
+    gap: 0.4rem !important;
   }
 }
