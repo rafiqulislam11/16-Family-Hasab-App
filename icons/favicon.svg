@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="khataCover" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="50%" stop-color="#1D4ED8" />
+      <stop offset="100%" stop-color="#1E3A8A" />
+    </linearGradient>
+    <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="50%" stop-color="#FFC107" />
+      <stop offset="100%" stop-color="#FFA000" />
+    </linearGradient>
+    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EDE8DC" />
+      <stop offset="100%" stop-color="#FAF8F3" />
+    </linearGradient>
+    <filter id="bookShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#1E3A8A" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Background Badge circle for app icon -->
+  <circle cx="256" cy="256" r="248" fill="#1E3A8A" />
+  
+  <!-- Book Spine & Pages Layer -->
+  <g filter="url(#bookShadow)">
+    <!-- Back Cover / Pages -->
+    <path d="M 120 70 L 410 70 C 425 70, 435 80, 435 95 L 435 425 C 435 440, 425 450, 410 450 L 120 450 Z" fill="url(#pageGrad)" />
+    <!-- Page edges lines -->
+    <line x1="428" y1="85" x2="428" y2="435" stroke="#D1C7B7" stroke-width="2" />
+    <line x1="422" y1="85" x2="422" y2="435" stroke="#D1C7B7" stroke-width="2" />
+    
+    <!-- Main Khata Front Cover -->
+    <path d="M 100 60 L 395 60 C 412 60, 425 73, 425 90 L 425 420 C 425 437, 412 450, 395 450 L 100 450 C 85 450, 75 438, 75 420 L 75 90 C 75 73, 85 60, 100 60 Z" fill="url(#khataCover)" />
+    
+    <!-- Book Spine Band -->
+    <path d="M 75 60 L 125 60 L 125 450 L 75 450 C 80 440, 80 70, 75 60 Z" fill="#172554" />
+    
+    <!-- Gold Spine Stitches -->
+    <line x1="125" y1="60" x2="125" y2="450" stroke="#FFC107" stroke-width="3" stroke-dasharray="10 8" />
+    
+    <!-- Gold Ribbon Bookmark -->
+    <path d="M 235 60 L 235 220 L 255 195 L 275 220 L 275 60 Z" fill="url(#goldRibbon)" />
+    
+    <!-- Ornate Frame on Khata -->
+    <rect x="150" y="105" width="240" height="300" rx="12" fill="none" stroke="#FFD54F" stroke-width="3" stroke-opacity="0.75" />
+    <rect x="156" y="111" width="228" height="288" rx="8" fill="none" stroke="#FFD54F" stroke-width="1" stroke-opacity="0.45" />
+
+    <!-- Ruled Ledger Lines inside emblem -->
+    <line x1="175" y1="260" x2="365" y2="260" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.4" />
+    <line x1="175" y1="300" x2="365" y2="300" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.4" />
+    <line x1="175" y1="340" x2="365" y2="340" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.4" />
+
+    <!-- Center Icon Symbol: Taka Symbol & Bengali Book -->
+    <circle cx="270" cy="180" r="42" fill="#1E3A8A" stroke="#FFD54F" stroke-width="3" />
+    <!-- Taka ৳ Symbol -->
+    <text x="270" y="196" font-family="'Hind Siliguri', 'Noto Sans Bengali', Arial, sans-serif" font-size="46" font-weight="bold" fill="#FFE082" text-anchor="middle">৳</text>
+    
+    <!-- "সহজ খাতা" Text -->
+    <text x="270" y="380" font-family="'Hind Siliguri', 'Noto Sans Bengali', Arial, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">সহজ খাতা</text>
+  </g>
+</svg>

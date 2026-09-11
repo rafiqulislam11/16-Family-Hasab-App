@@ -1,0 +1,575 @@
+/* ==========================================================================
+   সহজ খাতা — Print Stylesheet & A4 Customer Cash Memo
+   Professional Bangla Voucher, Invoice & Ledger Statements
+   ========================================================================== */
+
+#printableArea {
+  display: none;
+}
+
+/* Screen Preview for A4 Customer Memo Sheet */
+.a4-memo-sheet {
+  width: 210mm;
+  min-height: 280mm;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  color: #111827;
+  padding: 12mm 15mm;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  font-family: 'Anek Bangla', 'Noto Sans Bengali', -apple-system, sans-serif;
+  position: relative;
+  border: 1px solid #E5E7EB;
+}
+
+.a4-shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.a4-shop-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.a4-shop-logo-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1.5px solid #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.a4-shop-logo-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.a4-shop-name {
+  font-size: 20pt;
+  font-weight: 800;
+  color: #0F5132;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.a4-shop-tagline {
+  font-size: 9.5pt;
+  color: #4B5563;
+  margin-top: 2px;
+}
+
+.a4-shop-owner {
+  font-size: 10pt;
+  color: #1F2937;
+  margin-top: 3px;
+}
+
+.a4-shop-contact-right {
+  text-align: right;
+  font-size: 9.5pt;
+  color: #4B5563;
+  line-height: 1.45;
+}
+
+.a4-app-brand-badge {
+  display: inline-block;
+  margin-top: 4px;
+  background: #FEF3C7;
+  color: #92400E;
+  font-weight: 700;
+  font-size: 8pt;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #FDE68A;
+}
+
+.a4-header-rule {
+  height: 3px;
+  background: linear-gradient(90deg, #0F5132 0%, #059669 60%, #D4AF37 100%);
+  margin: 10px 0 14px;
+  border-radius: 2px;
+}
+
+.a4-memo-title-banner {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.a4-memo-title-banner span {
+  display: inline-block;
+  background: #F0FDF4;
+  border: 1.5px solid #059669;
+  color: #065F46;
+  font-weight: 800;
+  font-size: 12.5pt;
+  padding: 4px 22px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.a4-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.a4-meta-col {
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #FAF8F5;
+  font-size: 9.5pt;
+}
+
+.a4-box-title {
+  font-size: 9pt;
+  font-weight: 700;
+  color: #0F5132;
+  border-bottom: 1px dashed #CBD5E1;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.a4-meta-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: #374151;
+}
+
+.a4-memo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+}
+
+.a4-memo-table th,
+.a4-memo-table td {
+  border: 1px solid #D1D5DB;
+  padding: 6.5px 8px;
+  font-size: 9.5pt;
+}
+
+.a4-memo-table th {
+  background-color: #F3F4F6 !important;
+  color: #111827;
+  font-weight: 700;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.a4-prev-due-row {
+  background-color: #FEF9C3 !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.a4-prev-due-tag {
+  display: inline-block;
+  background: #B45309;
+  color: #FFFFFF !important;
+  font-size: 7.5pt;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 5px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.a4-financials-container {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.a4-in-words-box {
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #FAFAFA;
+}
+
+.a4-terms-box {
+  margin-top: 10px;
+  border-top: 1px dashed #E2E8F0;
+  padding-top: 6px;
+  font-size: 8.5pt;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+.a4-summary-card {
+  border: 1.5px solid #059669;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #F0FDF4;
+}
+
+.a4-summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5pt;
+  padding: 4px 0;
+  color: #1F2937;
+}
+
+.a4-summary-due-highlight {
+  border-top: 2px dashed #059669;
+  margin-top: 6px;
+  padding-top: 8px;
+  font-size: 12pt;
+  font-weight: 800;
+  color: #991B1B;
+}
+
+.a4-signatures-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 36px;
+  padding: 0 10px;
+}
+
+.a4-sign-block {
+  width: 190px;
+}
+
+.a4-sign-line {
+  border-top: 1.5px dashed #4B5563;
+  padding-top: 6px;
+  font-size: 9.5pt;
+  font-weight: 700;
+  text-align: center;
+  color: #374151;
+}
+
+.a4-digital-stamp {
+  width: 68px;
+  height: 68px;
+  border: 2px dashed #059669;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.a4-bottom-note {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 8pt;
+  color: #9CA3AF;
+  border-top: 1px solid #F3F4F6;
+  padding-top: 6px;
+}
+
+/* ==========================================================================
+   Print Rules
+   ========================================================================== */
+
+@media print {
+  @page {
+    margin: 10mm 12mm;
+    size: A4 portrait;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 11pt;
+  }
+
+  /* Hide entire application shell and dialog chrome */
+  .sidebar,
+  .topbar,
+  .mobile-bottom-nav,
+  .mobile-fab-btn,
+  .view-container,
+  .toast-container,
+  .pin-lock-overlay,
+  .sidebar-backdrop,
+  .modal-backdrop,
+  .memo-actions-bar,
+  .modal-header,
+  .modal-footer {
+    display: none !important;
+  }
+
+  /* When printing customer memo modal is open */
+  #customerMemoModal.active {
+    position: static !important;
+    display: block !important;
+    background: #FFFFFF !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #customerMemoModal.active .modal-dialog {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    transform: none !important;
+  }
+
+  #customerMemoModal.active .modal-body {
+    background: #FFFFFF !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  .a4-memo-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #customerMemoModal.active .pos-thermal-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* When printing Business Card Modal */
+  #businessCardModal.active {
+    position: static !important;
+    display: block !important;
+    background: #FFFFFF !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #businessCardModal.active .modal-dialog {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    transform: none !important;
+  }
+
+  #businessCardModal.active .biz-card-form-pane,
+  #businessCardModal.active .biz-card-actions-row,
+  #businessCardModal.active .side-toggle-pills,
+  #businessCardModal.active .card-theme-selector-grid,
+  #businessCardModal.active .modal-header,
+  #businessCardModal.active .modal-footer {
+    display: none !important;
+  }
+
+  #businessCardModal.active .biz-card-creator-layout {
+    display: block !important;
+  }
+
+  #businessCardModal.active .biz-card-preview-pane {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  #businessCardModal.active .biz-card-viewport-wrapper {
+    margin: 15mm auto !important;
+    max-width: 3.5in !important;
+    width: 3.5in !important;
+  }
+
+  #businessCardModal.active .biz-card-canvas {
+    width: 3.5in !important;
+    height: 2in !important;
+    aspect-ratio: 3.5 / 2 !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border: 1px dashed #94A3B8 !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Standard Statement Print area */
+  #printableArea {
+    display: block !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-voucher {
+    width: 100%;
+    font-family: 'Anek Bangla', 'Noto Sans Bengali', sans-serif;
+    color: #111;
+  }
+
+  .print-header {
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .print-shop-name {
+    font-size: 22pt;
+    font-weight: 800;
+    color: #0F5132;
+    line-height: 1.2;
+  }
+
+  .print-shop-owner {
+    font-size: 13pt;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .print-shop-contact {
+    font-size: 10.5pt;
+    color: #555;
+    margin-top: 3px;
+  }
+
+  .print-divider {
+    border-bottom: 2px solid #0F5132;
+    margin: 0.75rem 0 1rem;
+  }
+
+  .print-meta-grid {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5pt;
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #CCC;
+    padding: 8px 10px;
+    font-size: 10.5pt;
+  }
+
+  .print-table th {
+    background-color: #F3F4F6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-weight: 700;
+  }
+
+  .print-summary-box {
+    width: 280px;
+    margin-left: auto;
+    border: 1.5px solid #0F5132;
+    border-radius: 6px;
+    padding: 10px 14px;
+    background-color: #FAF8F5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    margin-bottom: 3rem;
+  }
+
+  .print-summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11pt;
+    padding: 3px 0;
+  }
+
+  .print-highlight {
+    border-top: 1.5px dashed #0F5132;
+    margin-top: 4px;
+    padding-top: 6px;
+    font-size: 12pt;
+    color: #0F5132;
+  }
+
+  .print-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4rem;
+  }
+
+  .print-sign-col {
+    width: 200px;
+  }
+
+  .print-sign-line {
+    border-top: 1px dashed #444;
+    padding-top: 6px;
+    font-size: 10pt;
+    text-align: center;
+  }
+
+  /* Preserve Official Seal & Status Stamps during Print */
+  .a4-shop-seal-wrap {
+    display: block !important;
+    position: absolute !important;
+    right: 18px !important;
+    bottom: 8px !important;
+    z-index: 10 !important;
+    transform: rotate(-10deg) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .official-rubber-seal-svg {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .proprietor-signature-facsimile {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .a4-status-rubber-stamp {
+    display: block !important;
+    position: absolute !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .pos-seal-stamp {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+

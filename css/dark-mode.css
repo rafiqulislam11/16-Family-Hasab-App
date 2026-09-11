@@ -1,0 +1,504 @@
+/* ==========================================================================
+   সহজ খাতা — Premium Deep Slate Dark Theme
+   Eye-soothing, high-contrast, modern SaaS/Fintech dark aesthetic
+   ========================================================================== */
+
+body.dark-theme {
+  /* ⬛ Deep Slate Backgrounds */
+  --bg-app:        #0F172A;   /* Deep Slate 900 - মূল ব্যাকগ্রাউন্ড */
+  --bg-surface:    #1E293B;   /* Slate 800 - হিসাবের কার্ড ও মডাল */
+  --bg-surface-alt:#0B1120;   /* Slate 950 - ইনপুট ও কিপ্যাড সারফেস */
+  --bg-hover:      #334155;   /* Slate 700 - মাউস হোভার ব্যাকগ্রাউন্ড */
+
+  /* ⬜ Text Hierarchy */
+  --text-main:     #F8FAFC;   /* Slate 50 - প্রধান লেখা (স্পষ্ট সাদা) */
+  --text-muted:    #94A3B8;   /* Slate 400 - সহায়ক লেখা */
+  --text-light:    #64748B;   /* Slate 500 - হালকা বিবরণ */
+
+  /* 🔵 Border & Dividers */
+  --border-color:  #334155;   /* Slate 700 - পরিষ্কার বর্ডার */
+  --border-light:  #1E293B;   /* হালকা ডিভাইডার */
+
+  /* 🟦 Primary - Electric Blue Glow */
+  --primary:       #3B82F6;
+  --primary-900:   #172554;
+  --primary-800:   #1E3A8A;
+  --primary-700:   #2563EB;
+  --primary-600:   #3B82F6;   /* ডার্ক মোডে স্পষ্ট দৃশ্যমান উজ্জ্বল নীল */
+  --primary-500:   #60A5FA;
+  --primary-400:   #93C5FD;
+  --primary-100:   rgba(59, 130, 246, 0.18);
+  --primary-50:    rgba(59, 130, 246, 0.10);
+
+  /* 🟢 Success - Paid, Profit, Income */
+  --color-success:     #22C55E;
+  --color-success-bg:  rgba(34, 197, 94, 0.15);
+  --color-income:      #22C55E;
+  --color-income-bg:   rgba(34, 197, 94, 0.15);
+  --color-profit:      #22C55E;
+
+  /* 🔴 Danger - Due, Loss, Expense */
+  --color-danger:      #EF4444;
+  --color-danger-bg:   rgba(239, 68, 68, 0.15);
+  --color-expense:     #EF4444;
+  --color-expense-bg:  rgba(239, 68, 68, 0.15);
+  --color-loss:        #EF4444;
+
+  /* 🟠 Warning - Pending, Debt Pay */
+  --color-warning:     #F59E0B;
+  --color-warning-bg:  rgba(245, 158, 11, 0.15);
+  --accent-gold:       #F59E0B;
+  --accent-gold-dark:  #D97706;
+  --accent-gold-light: #FEF3C7;
+  --accent-gold-bg:    rgba(245, 158, 11, 0.12);
+  --color-debt-pay:    #F59E0B;
+  --color-debt-pay-bg: rgba(245, 158, 11, 0.15);
+
+  /* Debt & Savings */
+  --color-debt-rec:    #3B82F6;
+  --color-debt-rec-bg: rgba(59, 130, 246, 0.15);
+  --color-savings:     #14B8A6;
+  --color-savings-bg:  rgba(20, 184, 166, 0.15);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.55);
+  --shadow-modal: 0 20px 35px -5px rgba(0, 0, 0, 0.75);
+}
+
+/* --- Surfaces & Cards --- */
+body.dark-theme .topbar,
+body.dark-theme .sidebar,
+body.dark-theme .card,
+body.dark-theme .metric-card,
+body.dark-theme .transaction-row,
+body.dark-theme .debt-person-card,
+body.dark-theme .budget-card,
+body.dark-theme .saving-goal-card,
+body.dark-theme .modal-dialog,
+body.dark-theme .fast-entry-section,
+body.dark-theme .mobile-bottom-nav {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+body.dark-theme .card:hover,
+body.dark-theme .transaction-row:hover,
+body.dark-theme .metric-card:hover {
+  border-color: #475569;
+}
+
+/* --- Buttons & Navigation --- */
+body.dark-theme .topbar {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: #334155;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .sidebar {
+  background-color: #0F172A;
+  border-right-color: #334155;
+}
+
+body.dark-theme .sidebar-header {
+  border-bottom-color: #334155;
+}
+
+body.dark-theme .brand-ver-badge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93C5FD;
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+body.dark-theme .nav-section-title {
+  color: #64748B;
+}
+
+body.dark-theme .nav-item {
+  color: #94A3B8;
+}
+
+body.dark-theme .nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #F8FAFC;
+}
+
+body.dark-theme .nav-item.active {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.18), rgba(30, 41, 59, 0.4));
+  color: #60A5FA;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+body.dark-theme .nav-item.active::before {
+  background: #3B82F6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+}
+
+body.dark-theme .nav-item.active .nav-icon-wrap {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60A5FA;
+}
+
+body.dark-theme .nav-item.active .nav-icon-wrap svg {
+  stroke: #60A5FA;
+}
+
+body.dark-theme .nav-badge {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #93C5FD;
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+body.dark-theme .founder-brand-sidebar-card {
+  background-color: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-theme .founder-status-dot {
+  border-color: #1E293B;
+}
+
+body.dark-theme .sidebar-footer {
+  background-color: #0B1120;
+  border-top-color: #334155;
+}
+
+body.dark-theme .topbar-view-chip {
+  background: rgba(59, 130, 246, 0.14);
+  color: #93C5FD;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+body.dark-theme .chip-pulse-dot {
+  background: #60A5FA;
+  box-shadow: 0 0 8px #60A5FA;
+}
+
+body.dark-theme .header-action-btn,
+body.dark-theme .topbar-account-btn {
+  background-color: #1E293B;
+  border-color: #334155;
+  color: var(--text-main);
+}
+
+body.dark-theme .header-action-btn:hover,
+body.dark-theme .topbar-account-btn:hover {
+  background-color: #334155;
+  border-color: var(--primary-600);
+}
+
+body.dark-theme .header-action-btn.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.dark-theme .mobile-bottom-nav {
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top-color: #334155;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .bottom-nav-item {
+  color: #94A3B8;
+}
+
+body.dark-theme .bottom-nav-item.active {
+  color: #60A5FA;
+}
+
+body.dark-theme .bottom-nav-item.active .bottom-nav-icon-wrap {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+body.dark-theme .bottom-nav-item.active .bottom-nav-icon-wrap svg {
+  stroke: #60A5FA;
+}
+
+body.dark-theme .bottom-nav-item.active .bottom-nav-label {
+  color: #60A5FA;
+}
+
+/* --- Fast Action Big Buttons (ড্যাশবোর্ড বড় বাটন) --- */
+body.dark-theme .fast-btn {
+  background-color: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-theme .fast-btn:hover {
+  background-color: #273549;
+  border-color: #475569;
+}
+
+body.dark-theme .fast-btn-sales {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #4ADE80;
+}
+body.dark-theme .fast-btn-sales .fast-btn-icon {
+  background: rgba(34, 197, 94, 0.22);
+}
+
+body.dark-theme .fast-btn-shopexp {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+}
+body.dark-theme .fast-btn-shopexp .fast-btn-icon {
+  background: rgba(245, 158, 11, 0.22);
+}
+
+body.dark-theme .fast-btn-houseexp {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #F87171;
+}
+body.dark-theme .fast-btn-houseexp .fast-btn-icon {
+  background: rgba(239, 68, 68, 0.22);
+}
+
+body.dark-theme .fast-btn-debt {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60A5FA;
+}
+body.dark-theme .fast-btn-debt .fast-btn-icon {
+  background: rgba(59, 130, 246, 0.22);
+}
+
+body.dark-theme .fast-btn-memo {
+  background: rgba(20, 184, 166, 0.12);
+  border-color: rgba(20, 184, 166, 0.35);
+  color: #2DD4BF;
+}
+body.dark-theme .fast-btn-memo .fast-btn-icon {
+  background: rgba(20, 184, 166, 0.22);
+}
+
+body.dark-theme .fast-btn-income {
+  background: rgba(148, 163, 184, 0.10);
+  border-color: rgba(148, 163, 184, 0.25);
+  color: #CBD5E1;
+}
+body.dark-theme .fast-btn-income .fast-btn-icon {
+  background: rgba(148, 163, 184, 0.18);
+}
+
+/* --- Metric Cards Icons & Highlights --- */
+body.dark-theme .metric-sales .metric-icon-wrap { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+body.dark-theme .metric-income .metric-icon-wrap { background: rgba(34, 197, 94, 0.2); color: #4ADE80; }
+body.dark-theme .metric-shopexpense .metric-icon-wrap { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+body.dark-theme .metric-profit .metric-icon-wrap { background: rgba(34, 197, 94, 0.2); color: #4ADE80; }
+body.dark-theme .metric-houseexpense .metric-icon-wrap { background: rgba(239, 68, 68, 0.2); color: #F87171; }
+body.dark-theme .metric-cash .metric-icon-wrap { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+
+/* --- Monthly Summary Banner --- */
+body.dark-theme .monthly-summary-banner {
+  background: linear-gradient(135deg, #0B1120 0%, #1E293B 50%, #1D4ED8 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Embedded Calculator Keypad & Inputs --- */
+body.dark-theme .inline-calc-keypad {
+  background: #0B1120;
+  border-color: #334155;
+}
+
+body.dark-theme .calc-btn {
+  background: #1E293B;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+body.dark-theme .calc-btn:hover {
+  background: #334155;
+}
+
+body.dark-theme .calc-btn.num {
+  background: #1E293B;
+  color: #F8FAFC;
+}
+
+body.dark-theme .calc-btn.op {
+  background: #0B1120;
+  color: #60A5FA;
+  border-color: #334155;
+}
+
+body.dark-theme .calc-btn.clear {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+body.dark-theme .calc-btn.back {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+body.dark-theme .calc-btn.equals {
+  background: #2563EB;
+  color: #FFFFFF;
+  border-color: #1D4ED8;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+body.dark-theme .calc-btn.equals:hover {
+  background: #3B82F6;
+}
+
+/* --- Form Controls & Presets --- */
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+  background-color: #0B1120;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .form-select:focus {
+  border-color: var(--primary-600);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+body.dark-theme .preset-chip {
+  background: #0B1120;
+  border-color: #334155;
+  color: #E2E8F0;
+}
+
+body.dark-theme .preset-chip:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+body.dark-theme .smart-calc-badge {
+  background: #172554;
+  color: #93C5FD;
+  border-color: rgba(147, 197, 253, 0.3);
+}
+
+body.dark-theme .type-pill-btn {
+  background: #0B1120;
+  border-color: #334155;
+  color: #94A3B8;
+}
+
+body.dark-theme .type-pill-btn.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+body.dark-theme .payment-method-tile {
+  background: #0B1120;
+  border-color: #334155;
+  color: #94A3B8;
+}
+
+body.dark-theme .payment-method-tile.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+body.dark-theme .category-chips-grid .cat-chip {
+  background: #0B1120;
+  border-color: #334155;
+  color: #E2E8F0;
+}
+
+body.dark-theme .category-chips-grid .cat-chip:hover,
+body.dark-theme .category-chips-grid .cat-chip.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+/* --- Quick Action Tools --- */
+body.dark-theme .quick-action-tile {
+  background-color: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-theme .quick-action-tile:hover {
+  border-color: #3B82F6;
+  background-color: #243247;
+}
+
+body.dark-theme .qa-icon-wrap {
+  background: #0B1120;
+}
+
+body.dark-theme .qa-label {
+  color: #F8FAFC;
+}
+
+/* --- Tables & Modals --- */
+body.dark-theme td,
+body.dark-theme th {
+  border-color: #334155;
+}
+
+body.dark-theme .modal-header,
+body.dark-theme .modal-footer {
+  border-color: #334155;
+}
+
+body.dark-theme .founder-brand-sidebar-card {
+  background: linear-gradient(135deg, #0B1120, #1E3A8A);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* --- Memo Shop Header & Business Card Generator (Dark Theme) --- */
+body.dark-theme .memo-shop-header-box {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-theme .biz-card-form-pane,
+body.dark-theme .biz-card-preview-pane {
+  background: #0F172A;
+  border-color: #334155;
+}
+
+body.dark-theme .card-theme-option {
+  background: #1E293B;
+  border-color: #334155;
+  color: #F1F5F9;
+}
+
+body.dark-theme .card-theme-option:hover {
+  border-color: #3B82F6;
+  background: #243247;
+}
+
+body.dark-theme .card-theme-option.active {
+  background: rgba(37, 99, 235, 0.25);
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+body.dark-theme .side-toggle-pills {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+body.dark-theme .side-pill {
+  color: #94A3B8;
+}
+
+body.dark-theme .side-pill.active {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+
