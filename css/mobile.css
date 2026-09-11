@@ -1345,3 +1345,857 @@ html, body {
     font-size: 1.05rem;
   }
 }
+
+/* ==========================================================================
+   7. RI Family & Business Hisab — Universal Mobile Responsive Enhancements
+   Complete mobile-first touch optimization for all devices (320px to tablets)
+   ========================================================================== */
+
+/* Universal Fluid Viewport & Touch Safeguards */
+html, body {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure adequate padding so mobile bottom touch bar never clips content */
+@media (max-width: 1024px) {
+  .main-wrapper,
+  .view-container,
+  .app-view {
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Hide standalone floating button; center bottom nav FAB replaces it cleanly */
+  .mobile-fab-btn {
+    display: none !important;
+  }
+}
+
+/* Generic View Header Row */
+.view-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.view-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 0.25rem 0;
+}
+
+.view-subtitle {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.view-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Responsive View Header */
+@media (max-width: 768px) {
+  .view-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .view-title {
+    font-size: 1.15rem;
+  }
+  .view-subtitle {
+    font-size: 0.78rem;
+  }
+  .view-header-actions {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .view-header-actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    font-size: 0.84rem;
+    padding: 0.55rem 0.75rem;
+    min-height: 42px;
+  }
+}
+
+/* Data Tables: Touch Scroll & Formatting */
+.data-table,
+.khata-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 560px;
+}
+
+.data-table th,
+.khata-table th {
+  background: var(--bg-surface-alt);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.data-table td,
+.khata-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover,
+.khata-table tbody tr:hover {
+  background: var(--bg-surface-alt);
+}
+
+@media (max-width: 640px) {
+  .data-table th,
+  .data-table td {
+    padding: 0.55rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  .data-table .btn-sm {
+    padding: 3px 6px !important;
+    font-size: 0.72rem !important;
+  }
+}
+
+/* Unified Metrics Grid System (both singular & plural classes) */
+.metrics-grid,
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .metrics-grid,
+  .metric-grid,
+  .debt-metrics-grid,
+  .product-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+  .metric-card {
+    padding: 0.8rem 0.7rem !important;
+  }
+  .metric-value {
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid,
+  .metric-grid,
+  .debt-metrics-grid,
+  .product-metrics-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+  }
+  .metric-card {
+    padding: 0.7rem 0.6rem !important;
+  }
+  .metric-value {
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .metrics-grid,
+  .metric-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+}
+
+/* Accounts Overview Strip on Mobiles */
+@media (max-width: 768px) {
+  .accounts-overview-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .account-strip-card {
+    padding: 0.75rem 0.85rem !important;
+  }
+  .account-strip-title {
+    font-size: 0.75rem !important;
+  }
+  .account-strip-amount {
+    font-size: 1.05rem !important;
+  }
+  .account-strip-icon {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .accounts-overview-strip {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+}
+
+/* Topbar Context Switcher on Mobiles */
+@media (max-width: 640px) {
+  .context-switcher-wrap {
+    padding: 2px !important;
+    gap: 2px !important;
+  }
+  .context-pill-btn {
+    padding: 0.25rem 0.55rem !important;
+    font-size: 0.76rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-left .greeting-title strong {
+    max-width: 95px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .context-switcher-wrap {
+    padding: 2px !important;
+    gap: 1px !important;
+  }
+  .context-pill-btn {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.7rem !important;
+    gap: 0.15rem !important;
+  }
+  .header-action-btn.search-trigger-btn {
+    width: 34px !important;
+    height: 34px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .context-pill-btn {
+    padding: 0.18rem 0.3rem !important;
+    font-size: 0.64rem !important;
+  }
+}
+
+/* Quick Add Grid on Mobiles */
+@media (max-width: 640px) {
+  .quick-add-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.65rem !important;
+    padding: 0.5rem 0 !important;
+  }
+  .quick-add-item {
+    padding: 0.85rem 0.5rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .quick-add-icon-circle {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.35rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+  .quick-add-label {
+    font-size: 0.84rem !important;
+  }
+  .quick-add-subtext {
+    font-size: 0.68rem !important;
+  }
+}
+
+/* POS & Purchase Modals Mobile Responsiveness */
+@media (max-width: 768px) {
+  #posSaleModal .modal-body,
+  #purchaseModal .modal-body {
+    padding: 0.85rem !important;
+    max-height: calc(90vh - 120px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #posSaleModal .form-row,
+  #purchaseModal .form-row {
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+  }
+
+  #posSaleModal .form-row .form-group,
+  #purchaseModal .form-row .form-group {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .pos-item-select,
+  .pur-item-select {
+    min-width: 140px;
+  }
+  .pos-item-qty,
+  .pur-item-qty {
+    min-width: 65px;
+  }
+  .pos-item-price,
+  .pur-item-price {
+    min-width: 80px;
+  }
+
+  /* Totals calculation boxes stack to 2 columns on phones */
+  #posSaleModal div[style*="grid-template-columns"],
+  #purchaseModal div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.65rem !important;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse !important;
+    gap: 0.5rem !important;
+  }
+  .modal-footer .btn {
+    width: 100% !important;
+    min-height: 44px;
+    font-size: 0.92rem !important;
+    justify-content: center;
+  }
+}
+
+/* Global Search Modal Mobile Optimization */
+@media (max-width: 640px) {
+  #globalSearchModal .modal-dialog {
+    max-height: 94vh !important;
+  }
+  #globalSearchInputField {
+    font-size: 16px !important;
+    padding: 0.65rem 0.85rem !important;
+  }
+  .search-results-list {
+    max-height: 65vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Family Finance View Responsive Layout */
+@media (max-width: 768px) {
+  #view-family .dashboard-charts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  #familyExpenseDonutChart {
+    max-height: 220px !important;
+  }
+}
+
+/* ==========================================================================
+   8. RI Family & Business Hisab — Universal Responsive Navigation Bar System
+   Seamless Navigation Experience Across Desktop, Tablet, Mobile & Ultrawide
+   ========================================================================== */
+
+/* --- A. Sidebar Close Button (Hidden on Desktop) --- */
+.sidebar-close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-alt);
+  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all var(--trans-fast);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sidebar-close-btn:hover {
+  background: #FEE2E2;
+  color: #DC2626;
+  border-color: #FCA5A5;
+}
+
+/* --- B. Desktop Mode (>= 1025px): Fixed Sidebar & Full Topbar --- */
+@media (min-width: 1025px) {
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: var(--sidebar-width, 250px) !important;
+    transform: translateX(0) !important;
+    z-index: 50 !important;
+    display: flex !important;
+  }
+
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  .sidebar-close-btn {
+    display: none !important;
+  }
+
+  .main-wrapper {
+    margin-left: var(--sidebar-width, 250px) !important;
+    width: calc(100% - var(--sidebar-width, 250px)) !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+
+  .mobile-fab-btn {
+    display: none !important;
+  }
+}
+
+/* --- C. Tablet & Mobile Drawer System (<= 1024px) --- */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(290px, 84vw) !important;
+    max-width: 320px !important;
+    background: var(--bg-surface) !important;
+    z-index: 1000 !important;
+    transform: translateX(-105%) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: none !important;
+    border-right: 1px solid var(--border-color) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.32) !important;
+  }
+
+  .sidebar-backdrop {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(15, 23, 42, 0.55) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    z-index: 999 !important;
+    opacity: 0;
+    transition: opacity 0.24s ease;
+  }
+
+  .sidebar-backdrop.show {
+    display: block !important;
+    opacity: 1 !important;
+  }
+
+  .sidebar-close-btn {
+    display: flex !important;
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .main-wrapper {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .mobile-menu-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid var(--border-color) !important;
+    z-index: 90 !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 0.35rem !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    box-sizing: border-box !important;
+  }
+
+  body.dark-theme .mobile-bottom-nav {
+    background: rgba(15, 23, 42, 0.96) !important;
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .bottom-nav-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.12rem;
+    flex: 1;
+    height: 100%;
+    color: var(--text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0.2rem 0;
+    transition: all var(--trans-fast);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bottom-nav-item:active {
+    transform: scale(0.92);
+  }
+
+  .bottom-nav-item.active {
+    color: var(--primary-600);
+  }
+
+  .bottom-nav-icon-wrap {
+    width: 36px;
+    height: 26px;
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .bottom-nav-icon-wrap svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.2;
+    transition: transform 0.2s ease;
+  }
+
+  .bottom-nav-item.active .bottom-nav-icon-wrap {
+    background: var(--primary-100);
+  }
+
+  .bottom-nav-item.active .bottom-nav-icon-wrap svg {
+    stroke: var(--primary-600);
+    transform: scale(1.1);
+  }
+
+  .bottom-nav-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .bottom-nav-item.active .bottom-nav-label {
+    font-weight: 800;
+    color: var(--primary-600);
+  }
+
+  /* Center Elevated FAB */
+  .bottom-nav-fab {
+    position: relative !important;
+    top: -14px !important;
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #1E40AF, #2563EB) !important;
+    color: #FFFFFF !important;
+    border: 4px solid var(--bg-surface, #FFFFFF) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 2rem !important;
+    line-height: 1 !important;
+    font-weight: 300 !important;
+    cursor: pointer !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.48) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    flex-shrink: 0 !important;
+    margin: 0 2px !important;
+    -webkit-tap-highlight-color: transparent !important;
+    z-index: 95 !important;
+  }
+
+  body.dark-theme .bottom-nav-fab {
+    border-color: #0F172A !important;
+  }
+
+  .bottom-nav-fab:active {
+    transform: scale(0.92) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
+  }
+}
+
+/* --- D. Large Phones & Phablets (481px - 768px) --- */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 0.85rem;
+    height: 58px;
+    gap: 0.5rem;
+  }
+
+  .topbar-left {
+    gap: 0.6rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .topbar-view-chip {
+    display: none !important;
+  }
+
+  .greeting-salute {
+    display: none !important;
+  }
+
+  .greeting-date {
+    display: none !important;
+  }
+
+  .topbar-memo-btn {
+    display: none !important;
+  }
+
+  .topbar-add-btn {
+    display: none !important;
+  }
+
+  .topbar-account-meta .biz-cat-badge {
+    display: none !important;
+  }
+
+  .topbar-account-meta #topbarAccountName {
+    max-width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .context-switcher-wrap {
+    padding: 2px !important;
+    gap: 2px !important;
+  }
+
+  .context-pill-btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.76rem !important;
+  }
+}
+
+/* --- E. Compact Mobile Phones (360px - 480px) --- */
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 0.55rem;
+    height: 54px;
+    gap: 0.35rem;
+  }
+
+  .topbar-left {
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .mobile-menu-toggle {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .mobile-menu-toggle svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .greeting-title {
+    font-size: 0.82rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .greeting-title strong {
+    max-width: 78px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .greeting-meta-row {
+    display: none !important;
+  }
+
+  .topbar-right {
+    gap: 0.25rem !important;
+    flex-shrink: 0;
+  }
+
+  .context-switcher-wrap {
+    padding: 1.5px !important;
+    gap: 1px !important;
+  }
+
+  .context-pill-btn {
+    padding: 0.2rem 0.38rem !important;
+    font-size: 0.68rem !important;
+    gap: 0.1rem !important;
+  }
+
+  .header-action-btn {
+    width: 32px !important;
+    height: 32px !important;
+    flex-shrink: 0;
+  }
+
+  .header-action-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .topbar-account-btn {
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    flex-shrink: 0;
+  }
+
+  .topbar-account-meta {
+    display: none !important;
+  }
+
+  .dropdown-chevron {
+    display: none !important;
+  }
+
+  .account-avatar-circle {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .logout-btn {
+    display: none !important;
+  }
+
+  .offline-status-badge {
+    display: none !important;
+  }
+}
+
+/* --- F. Ultra-Small Phones (320px - 360px) --- */
+@media (max-width: 360px) {
+  .topbar {
+    padding: 0 0.35rem;
+    height: 50px;
+  }
+
+  .greeting-title strong {
+    max-width: 58px !important;
+  }
+
+  .context-pill-btn {
+    padding: 0.16rem 0.26rem !important;
+    font-size: 0.62rem !important;
+  }
+
+  .header-action-btn {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .account-avatar-circle {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .bottom-nav-label {
+    font-size: 0.62rem !important;
+  }
+
+  .bottom-nav-fab {
+    width: 46px !important;
+    height: 46px !important;
+    top: -10px !important;
+    font-size: 1.6rem !important;
+  }
+}
+
+/* --- G. Landscape Mode on Mobiles (height <= 500px) --- */
+@media (max-height: 500px) and (max-width: 1024px) {
+  .mobile-bottom-nav {
+    height: 46px !important;
+  }
+  .bottom-nav-fab {
+    width: 42px !important;
+    height: 42px !important;
+    top: -8px !important;
+    font-size: 1.5rem !important;
+  }
+  .bottom-nav-label {
+    display: none !important;
+  }
+  .bottom-nav-icon-wrap {
+    height: 100% !important;
+  }
+  .main-wrapper {
+    padding-bottom: 54px !important;
+  }
+  .topbar {
+    height: 46px !important;
+  }
+}

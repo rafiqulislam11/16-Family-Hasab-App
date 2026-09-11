@@ -1000,6 +1000,16 @@ function getBusinessCategoryMeta(nameOrId) {
 const App = {
   state: {
     currentView: 'dashboard',
+    activeContext: 'ALL', // 'ALL' | 'BUSINESS' | 'FAMILY'
+    sales: [],
+    saleItems: [],
+    purchases: [],
+    purchaseItems: [],
+    customers: [],
+    suppliers: [],
+    financialAccounts: [],
+    stockMovements: [],
+    auditLogs: [],
     bannerPeriod: 'thisMonth',
     txPeriod: 'thisMonth',
     txTypeFilter: 'ALL',
@@ -1332,6 +1342,26 @@ const App = {
     const allProducts = await khataDB.getAll('products');
     this.state.products = allProducts.filter(p => p.accountId === activeAccId || (!p.accountId && activeAccId === 'acc_rafiqul_main'));
 
+    const allSales = (await khataDB.getAll('sales')) || [];
+    this.state.sales = allSales.filter(s => s.accountId === activeAccId || (!s.accountId && activeAccId === 'acc_rafiqul_main'));
+
+    this.state.saleItems = (await khataDB.getAll('saleItems')) || [];
+
+    const allPurchases = (await khataDB.getAll('purchases')) || [];
+    this.state.purchases = allPurchases.filter(p => p.accountId === activeAccId || (!p.accountId && activeAccId === 'acc_rafiqul_main'));
+
+    this.state.purchaseItems = (await khataDB.getAll('purchaseItems')) || [];
+
+    const allCustomers = (await khataDB.getAll('customers')) || [];
+    this.state.customers = allCustomers.filter(c => c.accountId === activeAccId || (!c.accountId && activeAccId === 'acc_rafiqul_main'));
+
+    const allSuppliers = (await khataDB.getAll('suppliers')) || [];
+    this.state.suppliers = allSuppliers.filter(s => s.accountId === activeAccId || (!s.accountId && activeAccId === 'acc_rafiqul_main'));
+
+    this.state.financialAccounts = (await khataDB.getAll('financialAccounts')) || [];
+    this.state.stockMovements = (await khataDB.getAll('stockMovements')) || [];
+    this.state.auditLogs = (await khataDB.getAll('auditLogs')) || [];
+
     // Sort transactions by date descending
     this.state.transactions.sort((a, b) => new Date(b.date + ' ' + (b.createdAt || '')) - new Date(a.date + ' ' + (a.createdAt || '')));
 
@@ -1657,7 +1687,13 @@ const App = {
       reports: 'রিপোর্ট ও এনালাইটিক্স',
       budget: 'মাসিক বাজেট',
       savings: 'সঞ্চয় লক্ষ্য',
-      settings: 'সেটিংস ও প্রোফাইল'
+      settings: 'সেটিংস ও প্রোফাইল',
+      sales: 'পিওএস বিক্রি ও চালান',
+      purchases: 'ক্রয় ও সরবরাহকারী হিসাব',
+      customers: 'কাস্টমার খতিয়ান',
+      suppliers: 'মহাজন / সাপ্লায়ার খতিয়ান',
+      accounts: 'ক্যাশ ও ব্যাংক একাউন্ট',
+      family: 'পারিবারিক হিসাব ও খরচ'
     };
     const topbarViewName = document.getElementById('topbarViewName');
     if (topbarViewName && viewNameMap[viewId]) {
@@ -1700,6 +1736,24 @@ const App = {
       case 'settings':
         this.updateHeaderAndProfile();
         break;
+      case 'sales':
+        this.renderSalesView();
+        break;
+      case 'purchases':
+        this.renderPurchasesView();
+        break;
+      case 'customers':
+        this.renderCustomersView();
+        break;
+      case 'suppliers':
+        this.renderSuppliersView();
+        break;
+      case 'accounts':
+        this.renderAccountsView();
+        break;
+      case 'family':
+        this.renderFamilyView();
+        break;
     }
   },
 
@@ -1711,16 +1765,74 @@ const App = {
   renderDashboard() {
     const today = Utils.getTodayDateString();
 
-    // 1. Calculate Today's Metrics (Section 3)
+    // 1. Calculate Today's Metrics with context
     const todayTxs = this.state.transactions.filter(t => t.date === today);
-    const todayMetrics = Accounting.calculateMetrics(todayTxs, this.state.debts);
+    const todaySales = (this.state.sales || []).filter(s => s.date === today);
+    const todayMetrics = Accounting.calculateMetrics(
+      todayTxs,
+      this.state.debts,
+      todaySales,
+      this.state.saleItems,
+      this.state.products,
+      this.state.activeContext
+    );
 
-    document.getElementById('todaySalesVal').textContent = Utils.formatCurrency(todayMetrics.totalSales);
-    document.getElementById('todayIncomeVal').textContent = Utils.formatCurrency(todayMetrics.totalIncome);
-    document.getElementById('todayShopExpenseVal').textContent = Utils.formatCurrency(todayMetrics.shopExpenses);
-    document.getElementById('todayProfitVal').textContent = Utils.formatCurrency(todayMetrics.businessProfit);
-    document.getElementById('todayHouseExpenseVal').textContent = Utils.formatCurrency(todayMetrics.householdExpenses);
-    document.getElementById('todayCashVal').textContent = Utils.formatCurrency(todayMetrics.netCashInHand);
+    const overallMetrics = Accounting.calculateMetrics(
+      this.state.transactions,
+      this.state.debts,
+      this.state.sales,
+      this.state.saleItems,
+      this.state.products,
+      this.state.activeContext
+    );
+
+    // Update Dashboard Accounts Strip
+    const elCash = document.getElementById('dashAccCash');
+    const elBank = document.getElementById('dashAccBank');
+    const elMobile = document.getElementById('dashAccMobile');
+    const elTotal = document.getElementById('dashAccTotal');
+
+    if (elCash) elCash.textContent = Utils.formatCurrency(overallMetrics.accountBalances?.Cash || 0);
+    if (elBank) elBank.textContent = Utils.formatCurrency(overallMetrics.accountBalances?.Bank || 0);
+    const mfsTotal = (overallMetrics.accountBalances?.bKash || 0) + (overallMetrics.accountBalances?.Nagad || 0) + (overallMetrics.accountBalances?.Rocket || 0);
+    if (elMobile) elMobile.textContent = Utils.formatCurrency(mfsTotal);
+    if (elTotal) elTotal.textContent = Utils.formatCurrency(overallMetrics.totalLiquidBalance || 0);
+
+    // Context-dependent dashboard labels
+    const salesCardLabel = document.querySelector('.card-sales .metric-label');
+    const expenseCardLabel = document.querySelector('.card-shop-expense .metric-label');
+    const profitCardLabel = document.querySelector('.card-profit .metric-label');
+
+    if (this.state.activeContext === 'FAMILY') {
+      if (salesCardLabel) salesCardLabel.textContent = 'আজকের পারিবারিক আয়';
+      if (expenseCardLabel) expenseCardLabel.textContent = 'আজকের সংসার খরচ';
+      if (profitCardLabel) profitCardLabel.textContent = 'আজকের পারিবারিক সঞ্চয়';
+
+      const elSales = document.getElementById('todaySalesVal');
+      const elExp = document.getElementById('todayShopExpenseVal');
+      const elProfit = document.getElementById('todayProfitVal');
+      if (elSales) elSales.textContent = Utils.formatCurrency(todayMetrics.familyIncome);
+      if (elExp) elExp.textContent = Utils.formatCurrency(todayMetrics.familyExpenses);
+      if (elProfit) elProfit.textContent = Utils.formatCurrency(todayMetrics.netFamilySavings);
+    } else {
+      if (salesCardLabel) salesCardLabel.textContent = 'আজকের মোট বিক্রি';
+      if (expenseCardLabel) expenseCardLabel.textContent = 'আজকের দোকান খরচ';
+      if (profitCardLabel) profitCardLabel.textContent = 'আজকের নিট লাভ';
+
+      const elSales = document.getElementById('todaySalesVal');
+      const elInc = document.getElementById('todayIncomeVal');
+      const elShopExp = document.getElementById('todayShopExpenseVal');
+      const elProfit = document.getElementById('todayProfitVal');
+      const elHouseExp = document.getElementById('todayHouseExpenseVal');
+      const elCashVal = document.getElementById('todayCashVal');
+
+      if (elSales) elSales.textContent = Utils.formatCurrency(todayMetrics.totalSales);
+      if (elInc) elInc.textContent = Utils.formatCurrency(todayMetrics.totalIncome);
+      if (elShopExp) elShopExp.textContent = Utils.formatCurrency(todayMetrics.shopExpenses);
+      if (elProfit) elProfit.textContent = Utils.formatCurrency(todayMetrics.businessProfit);
+      if (elHouseExp) elHouseExp.textContent = Utils.formatCurrency(todayMetrics.householdExpenses);
+      if (elCashVal) elCashVal.textContent = Utils.formatCurrency(todayMetrics.netCashInHand);
+    }
 
     // 2. Banner Period Summary (Section 4)
     this.renderBannerSummary();
@@ -1885,13 +1997,49 @@ const App = {
   },
 
   renderTransactionRowHTML(tx, showActions = false) {
-    const isInc = tx.type === 'INCOME';
+    const isInc = tx.type === 'INCOME' || tx.type === 'CUSTOMER_PAYMENT' || tx.type === 'SALE';
     const isSaving = tx.type === 'SAVING';
-    const isShopExp = tx.expenseType === 'EXPENSE_SHOP' || (tx.category && tx.category.includes('shop'));
+    const isTransfer = tx.type === 'TRANSFER';
+    const isShopExp = tx.expenseType === 'EXPENSE_SHOP' || tx.type === 'SUPPLIER_PAYMENT' || tx.type === 'PURCHASE' || (tx.category && tx.category.includes('shop'));
     
-    let typeClass = isInc ? 'tx-income' : (isSaving ? 'tx-saving' : 'tx-expense');
-    let typeLabel = isInc ? (tx.isSales ? 'বিক্রি' : 'আয়') : (isSaving ? 'সঞ্চয়' : (isShopExp ? 'দোকান খরচ' : 'সংসার খরচ'));
-    let icon = isInc ? '↑' : (isSaving ? '🪙' : '↓');
+    let typeClass = isTransfer ? 'tx-transfer' : (isInc ? 'tx-income' : (isSaving ? 'tx-saving' : 'tx-expense'));
+    let typeLabel = 'খরচ';
+    let icon = '↓';
+    let sign = '-';
+
+    if (isTransfer) {
+      typeLabel = 'ট্রান্সফার';
+      icon = '🔁';
+      sign = '↔';
+    } else if (tx.type === 'CUSTOMER_PAYMENT') {
+      typeLabel = 'বাকি আদায়';
+      icon = '📥';
+      sign = '+';
+    } else if (tx.type === 'SUPPLIER_PAYMENT') {
+      typeLabel = 'মহাজন পরিশোধ';
+      icon = '📤';
+      sign = '-';
+    } else if (tx.type === 'SALE') {
+      typeLabel = 'পিওএস বিক্রি';
+      icon = '🛒';
+      sign = '+';
+    } else if (tx.type === 'PURCHASE') {
+      typeLabel = 'মাল ক্রয়';
+      icon = '📦';
+      sign = '-';
+    } else if (isInc) {
+      typeLabel = tx.isSales ? 'বিক্রি' : 'আয়';
+      icon = '↑';
+      sign = '+';
+    } else if (isSaving) {
+      typeLabel = 'সঞ্চয়';
+      icon = '🪙';
+      sign = '-';
+    } else {
+      typeLabel = isShopExp ? 'দোকান খরচ' : 'সংসার খরচ';
+      icon = '↓';
+      sign = '-';
+    }
 
     const paymentLabel = {
       'Cash': 'নগদ',
@@ -1920,7 +2068,7 @@ const App = {
 
         <div class="tx-right">
           <div class="tx-amount">
-            ${isInc ? '+' : '-'} ${Utils.formatCurrency(tx.amount)}
+            ${sign} ${Utils.formatCurrency(tx.amount)}
           </div>
           ${showActions ? `
             <div class="tx-actions">
@@ -2281,15 +2429,24 @@ const App = {
   },
 
   deleteTransaction(id) {
+    const txToDelete = (this.state.transactions || []).find(t => t.id === id);
+    if (!txToDelete) return;
+
     UI.confirm({
       title: 'হিসাব মুছে ফেলবেন?',
-      message: 'আপনি কি নিশ্চিত যে এই লেনদেনটি সম্পূর্ণভাবে মুছে ফেলতে চান?',
+      message: 'আপনি কি নিশ্চিত যে এই লেনদেনটি মুছে ফেলতে চান?',
       confirmText: 'মুছে ফেলুন',
       onConfirm: async () => {
         await khataDB.delete('transactions', id);
-        UI.toast('লেনদেনটি মুছে ফেলা হয়েছে', 'info');
         await this.refreshAllData();
         this.renderCurrentView();
+
+        UI.undoToast('লেনদেনটি মুছে ফেলা হয়েছে', async () => {
+          await khataDB.put('transactions', txToDelete);
+          await this.refreshAllData();
+          this.renderCurrentView();
+          UI.toast('লেনদেনটি সফলভাবে পুনরুদ্ধার (Undo) করা হয়েছে ✓', 'success');
+        }, 6000);
       }
     });
   },
@@ -6429,6 +6586,1297 @@ const App = {
 
     if (inputOrEvent?.target) inputOrEvent.target.value = '';
     else if (inputOrEvent?.value) inputOrEvent.value = '';
+  },
+
+  /**
+   * ==========================================
+   * 15. RI CONTEXT SWITCHER (ALL | BUSINESS | FAMILY)
+   * ==========================================
+   */
+  switchContext(context = 'ALL') {
+    this.state.activeContext = context;
+    document.querySelectorAll('.context-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-context') === context);
+    });
+    this.renderCurrentView();
+    const label = context === 'BUSINESS' ? 'ব্যবসা (দোকান)' : (context === 'FAMILY' ? 'সংসার (পারিবারিক)' : 'সব হিসাব (একত্রে)');
+    UI.toast(`ভিউ ফিল্টার: ${label}`, 'info', 1800);
+  },
+
+  /**
+   * ==========================================
+   * 16. QUICK ADD MODAL SYSTEM (8 ACTIONS)
+   * ==========================================
+   */
+  openQuickAddModal() {
+    UI.openModal('quickAddModal');
+  },
+
+  /**
+   * ==========================================
+   * 17. GLOBAL INSTANT SEARCH (Ctrl+K)
+   * ==========================================
+   */
+  openGlobalSearch() {
+    UI.openModal('globalSearchModal');
+    setTimeout(() => {
+      const input = document.getElementById('globalSearchInputField');
+      if (input) {
+        input.value = '';
+        input.focus();
+        this.executeGlobalSearch('');
+      }
+    }, 150);
+  },
+
+  executeGlobalSearch(rawQuery = '') {
+    const q = (rawQuery || '').trim().toLowerCase();
+    const container = document.getElementById('globalSearchResultsContainer');
+    if (!container) return;
+
+    if (!q) {
+      container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 1.5rem 0;">খুঁজতে যেকোনো শব্দ, নাম, মোবাইল বা ক্যাটাগরি লিখুন...</p>';
+      return;
+    }
+
+    const results = [];
+
+    // Customers
+    (this.state.customers || []).forEach(c => {
+      if ((c.name && c.name.toLowerCase().includes(q)) || (c.phone && c.phone.includes(q))) {
+        results.push({
+          type: 'কাস্টমার',
+          title: c.name,
+          subtitle: `মোবাইল: ${c.phone || 'নেই'} | বর্তমান বাকি: ৳${Utils.toBanglaNumber(c.currentDue || 0)}`,
+          action: () => { UI.closeModal('globalSearchModal'); this.navigateView('customers'); }
+        });
+      }
+    });
+
+    // Suppliers
+    (this.state.suppliers || []).forEach(s => {
+      if ((s.name && s.name.toLowerCase().includes(q)) || (s.phone && s.phone.includes(q)) || (s.company && s.company.toLowerCase().includes(q))) {
+        results.push({
+          type: 'মহাজন',
+          title: s.name,
+          subtitle: `${s.company ? s.company + ' | ' : ''}দেনা: ৳${Utils.toBanglaNumber(s.currentDue || 0)}`,
+          action: () => { UI.closeModal('globalSearchModal'); this.navigateView('suppliers'); }
+        });
+      }
+    });
+
+    // Products
+    (this.state.products || []).forEach(p => {
+      if ((p.name && p.name.toLowerCase().includes(q)) || (p.code && p.code.toLowerCase().includes(q)) || (p.category && p.category.toLowerCase().includes(q))) {
+        results.push({
+          type: 'পণ্য স্টক',
+          title: p.name,
+          subtitle: `স্টক: ${Utils.toBanglaNumber(p.stock || 0)} ${p.unit || 'টি'} | বিক্রয় দর: ৳${Utils.toBanglaNumber(p.sellingPrice || 0)}`,
+          action: () => { UI.closeModal('globalSearchModal'); this.navigateView('products'); }
+        });
+      }
+    });
+
+    // Sales
+    (this.state.sales || []).forEach(s => {
+      if ((s.invoiceNo && s.invoiceNo.toLowerCase().includes(q)) || (s.customerName && s.customerName.toLowerCase().includes(q))) {
+        results.push({
+          type: 'বিক্রয় চালান',
+          title: `${s.invoiceNo || 'চালান'} - ${s.customerName || 'খুচরা ক্রেতা'}`,
+          subtitle: `তারিখ: ${s.date} | মোট: ৳${Utils.toBanglaNumber(s.totalAmount || 0)}`,
+          action: () => { UI.closeModal('globalSearchModal'); this.navigateView('sales'); }
+        });
+      }
+    });
+
+    // Transactions
+    (this.state.transactions || []).forEach(t => {
+      if ((t.categoryName && t.categoryName.toLowerCase().includes(q)) || (t.description && t.description.toLowerCase().includes(q)) || (t.person && t.person.toLowerCase().includes(q))) {
+        results.push({
+          type: 'লেনদেন',
+          title: `${t.categoryName || 'হিসাব'} - ৳${Utils.toBanglaNumber(t.amount || 0)}`,
+          subtitle: `${t.date} | ${t.person ? t.person + ' | ' : ''}${t.description || ''}`,
+          action: () => { UI.closeModal('globalSearchModal'); this.navigateView('transactions'); }
+        });
+      }
+    });
+
+    if (results.length === 0) {
+      container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem 0;">"${Utils.escapeHTML(q)}"-এর সাথে মিল রেখে কিছু পাওয়া যায়নি</p>`;
+      return;
+    }
+
+    container.innerHTML = results.slice(0, 15).map((r, idx) => `
+      <div class="search-result-item" style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="App._searchItemClick(${idx})">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="badge" style="font-size: 0.72rem; padding: 2px 6px; background: var(--bg-surface-alt);">${r.type}</span>
+            <strong style="font-size: 0.95rem; color: var(--text-main);">${Utils.escapeHTML(r.title)}</strong>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;">${Utils.escapeHTML(r.subtitle)}</p>
+        </div>
+        <span style="color: var(--primary-600); font-size: 0.85rem;">খুলুন →</span>
+      </div>
+    `).join('');
+
+    this._lastSearchResults = results;
+  },
+
+  _searchItemClick(idx) {
+    if (this._lastSearchResults && this._lastSearchResults[idx]) {
+      this._lastSearchResults[idx].action();
+    }
+  },
+
+  /**
+   * ==========================================
+   * 18. POS SALES VIEW & CONTROLLER
+   * ==========================================
+   */
+  renderSalesView() {
+    const today = Utils.getTodayDateString();
+    const todaySales = (this.state.sales || []).filter(s => s.date === today);
+    const totalToday = todaySales.reduce((sum, s) => sum + (Number(s.totalAmount) || 0), 0);
+    const paidToday = todaySales.reduce((sum, s) => sum + (Number(s.paidAmount) || 0), 0);
+    const dueToday = todaySales.reduce((sum, s) => sum + (Number(s.dueAmount) || 0), 0);
+
+    const elTotal = document.getElementById('salesTodayTotal');
+    const elCount = document.getElementById('salesTodayCount');
+    const elPaid = document.getElementById('salesTodayPaid');
+    const elDue = document.getElementById('salesTodayDue');
+    const tbody = document.getElementById('salesTableBody');
+
+    if (elTotal) elTotal.textContent = Utils.formatCurrency(totalToday);
+    if (elCount) elCount.textContent = `${Utils.toBanglaNumber(todaySales.length)} টি চালান`;
+    if (elPaid) elPaid.textContent = Utils.formatCurrency(paidToday);
+    if (elDue) elDue.textContent = Utils.formatCurrency(dueToday);
+
+    if (!tbody) return;
+    const salesList = [...(this.state.sales || [])].sort((a, b) => new Date(b.date + ' ' + (b.createdAt || '')) - new Date(a.date + ' ' + (a.createdAt || '')));
+
+    if (salesList.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2.5rem;">কোন বিক্রয় চালান পাওয়া যায়নি। উপরের বাটনে চাপ দিয়ে প্রথম পিওএস বিক্রি করুন।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = salesList.map((s, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 600;">${Utils.toBanglaNumber(idx + 1)}</td>
+        <td style="font-weight: 700; color: var(--primary-700);">${s.invoiceNo || 'INV-' + s.id.slice(-5)}</td>
+        <td>${Utils.formatDateBengali(s.date)}</td>
+        <td><strong>${Utils.escapeHTML(s.customerName || 'খুচরা কাস্টমার')}</strong>${s.customerPhone ? `<br><small style="color: var(--text-muted);">${s.customerPhone}</small>` : ''}</td>
+        <td style="text-align: right; font-weight: 700;">${Utils.formatCurrency(s.totalAmount)}</td>
+        <td style="text-align: right; color: #059669; font-weight: 600;">${Utils.formatCurrency(s.paidAmount)}</td>
+        <td style="text-align: right; color: ${s.dueAmount > 0 ? '#DC2626' : 'var(--text-muted)'}; font-weight: 700;">${Utils.formatCurrency(s.dueAmount)}</td>
+        <td style="text-align: center;">
+          <button class="btn-action-icon" title="মেমো প্রিন্ট করুন" onclick="App.printPOSInvoice('${s.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+          </button>
+          <button class="btn-action-icon btn-delete" title="মুছে ফেলুন" onclick="App.deletePOSSale('${s.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  openPOSSaleModal() {
+    const form = document.getElementById('posSaleForm');
+    if (form) form.reset();
+    document.getElementById('posSaleDate').value = Utils.getTodayDateString();
+    
+    const dl = document.getElementById('customersDatalist');
+    if (dl) {
+      dl.innerHTML = (this.state.customers || []).map(c => `<option value="${c.name}">${c.phone ? ' (' + c.phone + ')' : ''} - বাকি: ৳${c.currentDue || 0}</option>`).join('');
+    }
+
+    const dueAlert = document.getElementById('posCustomerDueAlert');
+    if (dueAlert) {
+      dueAlert.style.display = 'none';
+      dueAlert.innerHTML = '';
+    }
+
+    const tbody = document.getElementById('posItemsBody');
+    if (tbody) {
+      tbody.innerHTML = '';
+      this.addPOSItemRow();
+    }
+
+    this.recalcPOSTotals();
+    UI.openModal('posSaleModal');
+  },
+
+  onPOSCustomerChange(nameVal) {
+    const cust = (this.state.customers || []).find(c => c.name.toLowerCase() === (nameVal || '').trim().toLowerCase());
+    const phoneInput = document.getElementById('posCustomerPhone');
+    const alertBox = document.getElementById('posCustomerDueAlert');
+
+    if (cust) {
+      if (phoneInput && !phoneInput.value) phoneInput.value = cust.phone || '';
+      if (alertBox) {
+        if (cust.currentDue > 0) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = `⚠️ এই কাস্টমারের পূর্বে বকেয়া বাকি রয়েছে: <strong>৳ ${Utils.toBanglaNumber(cust.currentDue)}</strong>`;
+        } else {
+          alertBox.style.display = 'none';
+        }
+      }
+    } else {
+      if (alertBox) alertBox.style.display = 'none';
+    }
+  },
+
+  addPOSItemRow(productId = '', qty = 1, price = null) {
+    const tbody = document.getElementById('posItemsBody');
+    if (!tbody) return;
+
+    const rowId = 'pos_row_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5);
+    const prodOptions = (this.state.products || []).map(p => {
+      const stockBadge = p.stock <= 0 ? ' [স্টক শেষ]' : ` [মজুত: ${p.stock}]`;
+      const selected = p.id === productId ? 'selected' : '';
+      return `<option value="${p.id}" data-price="${p.sellingPrice || 0}" data-stock="${p.stock || 0}" data-unit="${p.unit || 'টি'}" ${selected}>${p.name}${stockBadge}</option>`;
+    }).join('');
+
+    const tr = document.createElement('tr');
+    tr.id = rowId;
+    tr.innerHTML = `
+      <td>
+        <select class="form-select pos-item-select" onchange="App.onPOSProductSelect(this)" required style="font-size: 0.88rem;">
+          <option value="">-- পণ্য নির্বাচন করুন --</option>
+          ${prodOptions}
+        </select>
+        <span class="pos-item-stock-hint" style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 2px;"></span>
+      </td>
+      <td>
+        <input type="number" class="form-control pos-item-qty" value="${qty}" min="0.01" step="any" required oninput="App.recalcPOSTotals()" style="text-align: center;">
+      </td>
+      <td>
+        <input type="number" class="form-control pos-item-price" value="${price !== null ? price : 0}" min="0" step="any" required oninput="App.recalcPOSTotals()" style="text-align: right;">
+      </td>
+      <td style="text-align: right; font-weight: 700; vertical-align: middle;">
+        <span class="pos-item-subtotal">৳ ০</span>
+      </td>
+      <td style="text-align: center; vertical-align: middle;">
+        <button type="button" class="btn-action-icon btn-delete" onclick="App.removePOSItemRow(this)" title="মুছুন">✕</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    this.recalcPOSTotals();
+  },
+
+  removePOSItemRow(btn) {
+    const tr = btn.closest('tr');
+    if (tr) tr.remove();
+    this.recalcPOSTotals();
+  },
+
+  onPOSProductSelect(selectElem) {
+    const tr = selectElem.closest('tr');
+    if (!tr) return;
+    const opt = selectElem.selectedOptions[0];
+    if (opt && opt.value) {
+      const price = opt.getAttribute('data-price') || 0;
+      const stock = opt.getAttribute('data-stock') || 0;
+      const unit = opt.getAttribute('data-unit') || 'টি';
+      
+      const priceInput = tr.querySelector('.pos-item-price');
+      if (priceInput) priceInput.value = price;
+
+      const hint = tr.querySelector('.pos-item-stock-hint');
+      if (hint) {
+        if (Number(stock) <= 0) {
+          hint.innerHTML = '<span style="color: #DC2626; font-weight: 700;">⚠️ স্টক শূন্য!</span>';
+        } else {
+          hint.innerHTML = `মজুত: ${Utils.toBanglaNumber(stock)} ${unit}`;
+        }
+      }
+    }
+    this.recalcPOSTotals();
+  },
+
+  recalcPOSTotals() {
+    const rows = document.querySelectorAll('#posItemsBody tr');
+    let subtotal = 0;
+
+    rows.forEach(r => {
+      const qty = parseFloat(r.querySelector('.pos-item-qty')?.value) || 0;
+      const price = parseFloat(r.querySelector('.pos-item-price')?.value) || 0;
+      const rowTotal = Math.round(qty * price * 100) / 100;
+      subtotal += rowTotal;
+      const subDisplay = r.querySelector('.pos-item-subtotal');
+      if (subDisplay) subDisplay.textContent = Utils.formatCurrency(rowTotal);
+    });
+
+    const discount = parseFloat(document.getElementById('posDiscountInput')?.value) || 0;
+    const grandTotal = Math.max(0, Math.round((subtotal - discount) * 100) / 100);
+    const paid = parseFloat(document.getElementById('posPaidInput')?.value) || 0;
+    const due = Math.max(0, Math.round((grandTotal - paid) * 100) / 100);
+
+    const elSub = document.getElementById('posSubtotalDisplay');
+    const elTot = document.getElementById('posTotalDisplay');
+    const elDue = document.getElementById('posDueDisplay');
+
+    if (elSub) elSub.textContent = Utils.formatCurrency(subtotal);
+    if (elTot) elTot.textContent = Utils.formatCurrency(grandTotal);
+    if (elDue) elDue.textContent = Utils.formatCurrency(due);
+  },
+
+  async handleSavePOSSale(e) {
+    e.preventDefault();
+    const rows = document.querySelectorAll('#posItemsBody tr');
+    if (rows.length === 0) {
+      UI.toast('অন্তত একটি পণ্য বিক্রয় তালিকায় যুক্ত করুন', 'warning');
+      return;
+    }
+
+    const items = [];
+    let hasInvalidStock = false;
+    let invalidProdName = '';
+
+    rows.forEach(r => {
+      const select = r.querySelector('.pos-item-select');
+      const productId = select?.value;
+      const opt = select?.selectedOptions[0];
+      const prodName = opt?.text?.split(' [')[0] || 'পণ্য';
+      const qty = parseFloat(r.querySelector('.pos-item-qty')?.value) || 0;
+      const price = parseFloat(r.querySelector('.pos-item-price')?.value) || 0;
+
+      if (productId && qty > 0) {
+        const product = (this.state.products || []).find(p => p.id === productId);
+        if (product && product.stock !== undefined && (product.stock - qty) < 0) {
+          hasInvalidStock = true;
+          invalidProdName = product.name;
+        }
+        items.push({
+          productId,
+          productName: prodName,
+          qty,
+          unitPrice: price,
+          costPrice: product ? (product.buyingPrice || 0) : 0,
+          subtotal: Math.round(qty * price * 100) / 100
+        });
+      }
+    });
+
+    if (items.length === 0) {
+      UI.toast('অনুগ্রহ করে পণ্যের নাম ও পরিমাণ সঠিকভাবে দিন', 'warning');
+      return;
+    }
+
+    if (hasInvalidStock) {
+      if (!confirm(`সতর্কতা: "${invalidProdName}" পণ্যের যথেষ্ট স্টক নেই। তবুও কি বিক্রি করতে চান? (স্টক মাইনাস হবে)`)) {
+        return;
+      }
+    }
+
+    const custName = (document.getElementById('posCustomerInput')?.value || '').trim() || 'খুচরা কাস্টমার';
+    const custPhone = (document.getElementById('posCustomerPhone')?.value || '').trim();
+    const date = document.getElementById('posSaleDate')?.value || Utils.getTodayDateString();
+    const discount = parseFloat(document.getElementById('posDiscountInput')?.value) || 0;
+    const paid = parseFloat(document.getElementById('posPaidInput')?.value) || 0;
+    const paymentMethod = document.getElementById('posPaymentMethodSelect')?.value || 'Cash';
+    const notes = (document.getElementById('posNoteInput')?.value || '').trim();
+
+    const subtotal = items.reduce((s, it) => s + it.subtotal, 0);
+    const totalAmount = Math.max(0, Math.round((subtotal - discount) * 100) / 100);
+    const dueAmount = Math.max(0, Math.round((totalAmount - paid) * 100) / 100);
+
+    const saleId = 'sale_' + Date.now();
+    const invoiceNo = 'INV-' + Date.now().toString().slice(-6);
+
+    // 1. Find or create customer
+    let customer = (this.state.customers || []).find(c => c.name.toLowerCase() === custName.toLowerCase());
+    let customerId = customer ? customer.id : null;
+    if (!customer && custName !== 'খুচরা কাস্টমার') {
+      customerId = 'cust_' + Date.now();
+      customer = {
+        id: customerId,
+        accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+        name: custName,
+        phone: custPhone,
+        address: '',
+        currentDue: dueAmount,
+        totalSales: totalAmount,
+        createdAt: new Date().toISOString()
+      };
+      await khataDB.put('customers', customer);
+    } else if (customer) {
+      customer.currentDue = (customer.currentDue || 0) + dueAmount;
+      customer.totalSales = (customer.totalSales || 0) + totalAmount;
+      if (custPhone && !customer.phone) customer.phone = custPhone;
+      await khataDB.put('customers', customer);
+    }
+
+    // 2. Save Sale Record
+    const saleRecord = {
+      id: saleId,
+      accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+      invoiceNo,
+      customerId,
+      customerName: custName,
+      customerPhone: custPhone,
+      date,
+      time: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
+      subtotal,
+      discount,
+      totalAmount,
+      paidAmount: paid,
+      dueAmount,
+      paymentMethod,
+      notes,
+      createdAt: new Date().toISOString()
+    };
+    await khataDB.put('sales', saleRecord);
+
+    // 3. Save Sale Items and decrement product stocks
+    for (const it of items) {
+      const itemId = 'sitem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+      await khataDB.put('saleItems', {
+        id: itemId,
+        saleId,
+        productId: it.productId,
+        productName: it.productName,
+        quantity: it.qty,
+        unitPrice: it.unitPrice,
+        costPrice: it.costPrice,
+        subtotal: it.subtotal
+      });
+
+      const prod = (this.state.products || []).find(p => p.id === it.productId);
+      if (prod) {
+        prod.stock = (Number(prod.stock) || 0) - it.qty;
+        await khataDB.put('products', prod);
+        await khataDB.recordStockMovement({
+          productId: it.productId,
+          productName: it.productName,
+          type: 'SALE_OUT',
+          quantity: it.qty,
+          referenceId: saleId,
+          date
+        });
+      }
+    }
+
+    // 4. Record Unified Transaction for paid amount
+    if (paid > 0) {
+      const txId = 'tx_' + Date.now();
+      await khataDB.put('transactions', {
+        id: txId,
+        accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+        type: 'INCOME',
+        category: 'cat_inc_sales',
+        categoryName: 'দোকান বিক্রি (POS)',
+        amount: paid,
+        date,
+        person: custName,
+        paymentMethod,
+        description: `চালান #${invoiceNo}`,
+        context: 'BUSINESS',
+        isSales: true,
+        referenceId: saleId,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    // 5. If due amount > 0, record in debts
+    if (dueAmount > 0 && custName !== 'খুচরা কাস্টমার') {
+      const debtId = 'debt_' + Date.now();
+      await khataDB.put('debts', {
+        id: debtId,
+        accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+        personName: custName,
+        personPhone: custPhone,
+        amount: dueAmount,
+        paidAmount: 0,
+        remainingAmount: dueAmount,
+        type: 'RECEIVABLE',
+        status: 'UNPAID',
+        date,
+        description: `চালান #${invoiceNo}-এর বাকি`,
+        referenceId: saleId,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    await khataDB.logAudit('POS_SALE', `বিক্রয় চালান #${invoiceNo} তৈরি করা হয়েছে। মোট: ৳${totalAmount}`);
+
+    UI.closeModal('posSaleModal');
+    UI.toast('পিওএস বিক্রি সফলভাবে সম্পন্ন হয়েছে! ✓', 'success');
+
+    await this.refreshAllData();
+    this.renderCurrentView();
+
+    // Print Invoice Prompt
+    setTimeout(() => {
+      UI.printInvoice({
+        ...saleRecord,
+        businessName: this.state.activeAccount?.businessName || 'RI Family & Business Hisab',
+        ownerName: this.state.activeAccount?.ownerName || 'রফিকুল ইসলাম',
+        phone: this.state.activeAccount?.phone || '01700-000000',
+        address: this.state.activeAccount?.address || 'বাংলাদেশ',
+        items
+      });
+    }, 400);
+  },
+
+  async printPOSInvoice(saleId) {
+    const sale = (this.state.sales || []).find(s => s.id === saleId);
+    if (!sale) return;
+    const allItems = await khataDB.getAll('saleItems');
+    const items = allItems.filter(it => it.saleId === saleId);
+
+    UI.printInvoice({
+      ...sale,
+      businessName: this.state.activeAccount?.businessName || 'RI Family & Business Hisab',
+      ownerName: this.state.activeAccount?.ownerName || 'রফিকুল ইসলাম',
+      phone: this.state.activeAccount?.phone || '01700-000000',
+      address: this.state.activeAccount?.address || 'বাংলাদেশ',
+      items
+    });
+  },
+
+  async deletePOSSale(saleId) {
+    const sale = (this.state.sales || []).find(s => s.id === saleId);
+    if (!sale) return;
+
+    UI.confirm({
+      title: 'চালান মুছে ফেলবেন?',
+      message: `আপনি কি নিশ্চিত যে চালান #${sale.invoiceNo} মুছে ফেলতে চান?`,
+      confirmText: 'মুছে ফেলুন',
+      isDanger: true,
+      onConfirm: async () => {
+        await khataDB.delete('sales', saleId);
+        const allItems = await khataDB.getAll('saleItems');
+        for (const it of allItems.filter(i => i.saleId === saleId)) {
+          await khataDB.delete('saleItems', it.id);
+        }
+        await this.refreshAllData();
+        this.renderCurrentView();
+        UI.toast('চালানটি মুছে ফেলা হয়েছে', 'info');
+      }
+    });
+  },
+
+  /**
+   * ==========================================
+   * 19. PURCHASES VIEW & CONTROLLER
+   * ==========================================
+   */
+  renderPurchasesView() {
+    const today = Utils.getTodayDateString();
+    const todayPur = (this.state.purchases || []).filter(p => p.date === today);
+    const totalToday = todayPur.reduce((sum, p) => sum + (Number(p.totalAmount) || 0), 0);
+    const paidToday = todayPur.reduce((sum, p) => sum + (Number(p.paidAmount) || 0), 0);
+    const dueToday = todayPur.reduce((sum, p) => sum + (Number(p.dueAmount) || 0), 0);
+
+    const elTotal = document.getElementById('purchaseTodayTotal');
+    const elPaid = document.getElementById('purchaseTodayPaid');
+    const elDue = document.getElementById('purchaseTodayDue');
+    const tbody = document.getElementById('purchasesTableBody');
+
+    if (elTotal) elTotal.textContent = Utils.formatCurrency(totalToday);
+    if (elPaid) elPaid.textContent = Utils.formatCurrency(paidToday);
+    if (elDue) elDue.textContent = Utils.formatCurrency(dueToday);
+
+    if (!tbody) return;
+    const purchasesList = [...(this.state.purchases || [])].sort((a, b) => new Date(b.date + ' ' + (b.createdAt || '')) - new Date(a.date + ' ' + (a.createdAt || '')));
+
+    if (purchasesList.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2.5rem;">কোন ক্রয় চালান পাওয়া যায়নি। উপরের বাটনে চাপ দিয়ে নতুন ক্রয় চালান যোগ করুন।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = purchasesList.map((p, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 600;">${Utils.toBanglaNumber(idx + 1)}</td>
+        <td style="font-weight: 700; color: #D97706;">${p.invoiceNo || 'PUR-' + p.id.slice(-5)}</td>
+        <td>${Utils.formatDateBengali(p.date)}</td>
+        <td><strong>${Utils.escapeHTML(p.supplierName || 'সাপ্লায়ার')}</strong></td>
+        <td style="text-align: right; font-weight: 700;">${Utils.formatCurrency(p.totalAmount)}</td>
+        <td style="text-align: right; color: #059669; font-weight: 600;">${Utils.formatCurrency(p.paidAmount)}</td>
+        <td style="text-align: right; color: ${p.dueAmount > 0 ? '#DC2626' : 'var(--text-muted)'}; font-weight: 700;">${Utils.formatCurrency(p.dueAmount)}</td>
+        <td style="text-align: center;">
+          <button class="btn-action-icon btn-delete" title="মুছে ফেলুন" onclick="App.deletePurchase('${p.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  openPurchaseModal() {
+    const form = document.getElementById('purchaseForm');
+    if (form) form.reset();
+    document.getElementById('purchaseDate').value = Utils.getTodayDateString();
+
+    const dl = document.getElementById('suppliersDatalist');
+    if (dl) {
+      dl.innerHTML = (this.state.suppliers || []).map(s => `<option value="${s.name}">${s.company ? ' (' + s.company + ')' : ''} - দেনা: ৳${s.currentDue || 0}</option>`).join('');
+    }
+
+    const tbody = document.getElementById('purchaseItemsBody');
+    if (tbody) {
+      tbody.innerHTML = '';
+      this.addPurchaseItemRow();
+    }
+
+    this.recalcPurchaseTotals();
+    UI.openModal('purchaseModal');
+  },
+
+  addPurchaseItemRow(productId = '', qty = 1, price = null) {
+    const tbody = document.getElementById('purchaseItemsBody');
+    if (!tbody) return;
+
+    const rowId = 'pur_row_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5);
+    const prodOptions = (this.state.products || []).map(p => {
+      const selected = p.id === productId ? 'selected' : '';
+      return `<option value="${p.id}" data-buyprice="${p.buyingPrice || 0}" ${selected}>${p.name}</option>`;
+    }).join('');
+
+    const tr = document.createElement('tr');
+    tr.id = rowId;
+    tr.innerHTML = `
+      <td>
+        <select class="form-select pur-item-select" onchange="App.onPurchaseProductSelect(this)" required style="font-size: 0.88rem;">
+          <option value="">-- পণ্য নির্বাচন করুন --</option>
+          ${prodOptions}
+        </select>
+      </td>
+      <td>
+        <input type="number" class="form-control pur-item-qty" value="${qty}" min="0.01" step="any" required oninput="App.recalcPurchaseTotals()" style="text-align: center;">
+      </td>
+      <td>
+        <input type="number" class="form-control pur-item-price" value="${price !== null ? price : 0}" min="0" step="any" required oninput="App.recalcPurchaseTotals()" style="text-align: right;">
+      </td>
+      <td style="text-align: right; font-weight: 700; vertical-align: middle;">
+        <span class="pur-item-subtotal">৳ ০</span>
+      </td>
+      <td style="text-align: center; vertical-align: middle;">
+        <button type="button" class="btn-action-icon btn-delete" onclick="App.removePurchaseItemRow(this)" title="মুছুন">✕</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    this.recalcPurchaseTotals();
+  },
+
+  removePurchaseItemRow(btn) {
+    const tr = btn.closest('tr');
+    if (tr) tr.remove();
+    this.recalcPurchaseTotals();
+  },
+
+  onPurchaseProductSelect(selectElem) {
+    const tr = selectElem.closest('tr');
+    if (!tr) return;
+    const opt = selectElem.selectedOptions[0];
+    if (opt && opt.value) {
+      const buyPrice = opt.getAttribute('data-buyprice') || 0;
+      const priceInput = tr.querySelector('.pur-item-price');
+      if (priceInput) priceInput.value = buyPrice;
+    }
+    this.recalcPurchaseTotals();
+  },
+
+  recalcPurchaseTotals() {
+    const rows = document.querySelectorAll('#purchaseItemsBody tr');
+    let total = 0;
+
+    rows.forEach(r => {
+      const qty = parseFloat(r.querySelector('.pur-item-qty')?.value) || 0;
+      const price = parseFloat(r.querySelector('.pur-item-price')?.value) || 0;
+      const rowTotal = Math.round(qty * price * 100) / 100;
+      total += rowTotal;
+      const subDisplay = r.querySelector('.pur-item-subtotal');
+      if (subDisplay) subDisplay.textContent = Utils.formatCurrency(rowTotal);
+    });
+
+    const paid = parseFloat(document.getElementById('purchasePaidInput')?.value) || 0;
+    const due = Math.max(0, Math.round((total - paid) * 100) / 100);
+
+    const elTot = document.getElementById('purchaseTotalDisplay');
+    const elDue = document.getElementById('purchaseDueDisplay');
+
+    if (elTot) elTot.textContent = Utils.formatCurrency(total);
+    if (elDue) elDue.textContent = Utils.formatCurrency(due);
+  },
+
+  async handleSavePurchase(e) {
+    e.preventDefault();
+    const rows = document.querySelectorAll('#purchaseItemsBody tr');
+    if (rows.length === 0) {
+      UI.toast('কমপক্ষে একটি পণ্য ক্রয়ের বিবরণ যোগ করুন', 'warning');
+      return;
+    }
+
+    const items = [];
+    rows.forEach(r => {
+      const select = r.querySelector('.pur-item-select');
+      const productId = select?.value;
+      const opt = select?.selectedOptions[0];
+      const prodName = opt?.text || 'পণ্য';
+      const qty = parseFloat(r.querySelector('.pur-item-qty')?.value) || 0;
+      const price = parseFloat(r.querySelector('.pur-item-price')?.value) || 0;
+
+      if (productId && qty > 0) {
+        items.push({
+          productId,
+          productName: prodName,
+          qty,
+          unitPrice: price,
+          subtotal: Math.round(qty * price * 100) / 100
+        });
+      }
+    });
+
+    if (items.length === 0) {
+      UI.toast('পণ্য ও পরিমাণ সঠিকভাবে প্রদান করুন', 'warning');
+      return;
+    }
+
+    const suppName = (document.getElementById('purchaseSupplierInput')?.value || '').trim() || 'সাধারণ সাপ্লায়ার';
+    const invoiceNo = (document.getElementById('purchaseInvoiceNo')?.value || '').trim() || ('PUR-' + Date.now().toString().slice(-6));
+    const date = document.getElementById('purchaseDate')?.value || Utils.getTodayDateString();
+    const paid = parseFloat(document.getElementById('purchasePaidInput')?.value) || 0;
+    const paymentMethod = document.getElementById('purchasePaymentMethodSelect')?.value || 'Cash';
+
+    const totalAmount = items.reduce((s, it) => s + it.subtotal, 0);
+    const dueAmount = Math.max(0, Math.round((totalAmount - paid) * 100) / 100);
+
+    const purchaseId = 'pur_' + Date.now();
+
+    // 1. Supplier update or creation
+    let supplier = (this.state.suppliers || []).find(s => s.name.toLowerCase() === suppName.toLowerCase());
+    let supplierId = supplier ? supplier.id : null;
+    if (!supplier) {
+      supplierId = 'supp_' + Date.now();
+      supplier = {
+        id: supplierId,
+        accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+        name: suppName,
+        phone: '',
+        company: '',
+        currentDue: dueAmount,
+        totalPurchases: totalAmount,
+        createdAt: new Date().toISOString()
+      };
+      await khataDB.put('suppliers', supplier);
+    } else {
+      supplier.currentDue = (supplier.currentDue || 0) + dueAmount;
+      supplier.totalPurchases = (supplier.totalPurchases || 0) + totalAmount;
+      await khataDB.put('suppliers', supplier);
+    }
+
+    // 2. Save Purchase Record
+    const purchaseRecord = {
+      id: purchaseId,
+      accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+      invoiceNo,
+      supplierId,
+      supplierName: suppName,
+      date,
+      totalAmount,
+      paidAmount: paid,
+      dueAmount,
+      paymentMethod,
+      createdAt: new Date().toISOString()
+    };
+    await khataDB.put('purchases', purchaseRecord);
+
+    // 3. Save Purchase Items, update product stock & buying price
+    for (const it of items) {
+      const itemId = 'pitem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+      await khataDB.put('purchaseItems', {
+        id: itemId,
+        purchaseId,
+        productId: it.productId,
+        productName: it.productName,
+        quantity: it.qty,
+        unitPrice: it.unitPrice,
+        subtotal: it.subtotal
+      });
+
+      const prod = (this.state.products || []).find(p => p.id === it.productId);
+      if (prod) {
+        prod.stock = (Number(prod.stock) || 0) + it.qty;
+        prod.buyingPrice = it.unitPrice;
+        await khataDB.put('products', prod);
+
+        await khataDB.recordStockMovement({
+          productId: it.productId,
+          productName: it.productName,
+          type: 'PURCHASE_IN',
+          quantity: it.qty,
+          referenceId: purchaseId,
+          date
+        });
+      }
+    }
+
+    // 4. Unified Transaction for paid amount
+    if (paid > 0) {
+      const txId = 'tx_' + Date.now();
+      await khataDB.put('transactions', {
+        id: txId,
+        accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+        type: 'EXPENSE',
+        category: 'cat_exp_stock',
+        categoryName: 'মালামাল ক্রয় (Stock Purchase)',
+        expenseType: 'EXPENSE_SHOP',
+        amount: paid,
+        date,
+        person: suppName,
+        paymentMethod,
+        description: `ক্রয় চালান #${invoiceNo}`,
+        context: 'BUSINESS',
+        referenceId: purchaseId,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    // 5. Debt record for due (payable)
+    if (dueAmount > 0) {
+      const debtId = 'debt_' + Date.now();
+      await khataDB.put('debts', {
+        id: debtId,
+        accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+        personName: suppName,
+        amount: dueAmount,
+        paidAmount: 0,
+        remainingAmount: dueAmount,
+        type: 'PAYABLE',
+        status: 'UNPAID',
+        date,
+        description: `ক্রয় চালান #${invoiceNo}-এর পাওনা`,
+        referenceId: purchaseId,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    await khataDB.logAudit('PURCHASE_ENTRY', `ক্রয় চালান #${invoiceNo} সম্পন্ন। মোট: ৳${totalAmount}`);
+
+    UI.closeModal('purchaseModal');
+    UI.toast('ক্রয় চালান সফলভাবে সংরক্ষণ ও স্টক আপডেট হয়েছে! ✓', 'success');
+
+    await this.refreshAllData();
+    this.renderCurrentView();
+  },
+
+  async deletePurchase(purchaseId) {
+    const pur = (this.state.purchases || []).find(p => p.id === purchaseId);
+    if (!pur) return;
+
+    UI.confirm({
+      title: 'ক্রয় চালান মুছে ফেলবেন?',
+      message: `আপনি কি নিশ্চিত যে চালান #${pur.invoiceNo || purchaseId} মুছে ফেলতে চান?`,
+      confirmText: 'মুছে ফেলুন',
+      isDanger: true,
+      onConfirm: async () => {
+        await khataDB.delete('purchases', purchaseId);
+        const allItems = await khataDB.getAll('purchaseItems');
+        for (const it of allItems.filter(i => i.purchaseId === purchaseId)) {
+          await khataDB.delete('purchaseItems', it.id);
+        }
+        await this.refreshAllData();
+        this.renderCurrentView();
+        UI.toast('ক্রয় চালানটি মুছে ফেলা হয়েছে', 'info');
+      }
+    });
+  },
+
+  /**
+   * ==========================================
+   * 20. CUSTOMERS DIRECTORY & LEDGERS
+   * ==========================================
+   */
+  renderCustomersView() {
+    const list = this.state.customers || [];
+    const totalDue = list.reduce((s, c) => s + (Number(c.currentDue) || 0), 0);
+
+    const elDue = document.getElementById('customersTotalDue');
+    const elBadge = document.getElementById('customersCountBadge');
+    const tbody = document.getElementById('customersTableBody');
+
+    if (elDue) elDue.textContent = Utils.formatCurrency(totalDue);
+    if (elBadge) elBadge.textContent = `${Utils.toBanglaNumber(list.length)} জন`;
+
+    if (!tbody) return;
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2.5rem;">কোন কাস্টমার পাওয়া যায়নি। উপরের বাটনে চাপ দিয়ে কাস্টমার যোগ করুন।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map((c, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 600;">${Utils.toBanglaNumber(idx + 1)}</td>
+        <td><strong>${Utils.escapeHTML(c.name)}</strong></td>
+        <td>${c.phone ? `<a href="tel:${c.phone}" style="color: var(--primary-600);">${c.phone}</a>` : '—'}</td>
+        <td>${Utils.escapeHTML(c.address || '—')}</td>
+        <td style="text-align: right;">${Utils.formatCurrency(c.totalSales || 0)}</td>
+        <td style="text-align: right; color: ${c.currentDue > 0 ? '#DC2626' : '#059669'}; font-weight: 700;">${Utils.formatCurrency(c.currentDue || 0)}</td>
+        <td style="text-align: center;">
+          <button class="btn btn-success btn-sm" style="padding: 3px 8px; font-size: 0.78rem;" onclick="App.openCustomerPaymentModal('${c.id}')">+ টাকা আদায়</button>
+          <button class="btn-action-icon" title="এডিট" onclick="App.openCustomerModal('${c.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn-action-icon btn-delete" title="মুছুন" onclick="App.deleteCustomer('${c.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  openCustomerModal(customerId = null) {
+    const form = document.getElementById('customerForm');
+    if (form) form.reset();
+    document.getElementById('customerId').value = customerId || '';
+    document.getElementById('customerModalTitle').textContent = customerId ? 'কাস্টমার তথ্য সম্পাদনা' : 'নতুন কাস্টমার যোগ করুন';
+
+    if (customerId) {
+      const c = (this.state.customers || []).find(cust => cust.id === customerId);
+      if (c) {
+        document.getElementById('custNameInput').value = c.name || '';
+        document.getElementById('custPhoneInput').value = c.phone || '';
+        document.getElementById('custAddressInput').value = c.address || '';
+        document.getElementById('custOpeningDueInput').value = c.currentDue || 0;
+      }
+    }
+    UI.openModal('customerModal');
+  },
+
+  async handleSaveCustomer(e) {
+    e.preventDefault();
+    const id = document.getElementById('customerId')?.value || ('cust_' + Date.now());
+    const name = (document.getElementById('custNameInput')?.value || '').trim();
+    const phone = (document.getElementById('custPhoneInput')?.value || '').trim();
+    const address = (document.getElementById('custAddressInput')?.value || '').trim();
+    const openingDue = parseFloat(document.getElementById('custOpeningDueInput')?.value) || 0;
+
+    if (!name) return;
+
+    const existing = (this.state.customers || []).find(c => c.id === id);
+    const customerObj = {
+      id,
+      accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+      name,
+      phone,
+      address,
+      currentDue: existing ? (existing.currentDue || 0) : openingDue,
+      totalSales: existing ? (existing.totalSales || 0) : 0,
+      updatedAt: new Date().toISOString()
+    };
+    if (!existing) customerObj.createdAt = new Date().toISOString();
+
+    await khataDB.put('customers', customerObj);
+    UI.closeModal('customerModal');
+    UI.toast('কাস্টমার তথ্য সংরক্ষিত হয়েছে ✓', 'success');
+
+    await this.refreshAllData();
+    this.renderCurrentView();
+  },
+
+  async deleteCustomer(customerId) {
+    UI.confirm({
+      title: 'কাস্টমার মুছে ফেলবেন?',
+      message: 'আপনি কি নিশ্চিত যে এই কাস্টমারকে তালিকা থেকে মুছে ফেলতে চান?',
+      confirmText: 'মুছে ফেলুন',
+      isDanger: true,
+      onConfirm: async () => {
+        await khataDB.delete('customers', customerId);
+        await this.refreshAllData();
+        this.renderCurrentView();
+        UI.toast('কাস্টমার মুছে ফেলা হয়েছে', 'info');
+      }
+    });
+  },
+
+  openCustomerPaymentModal(customerId = null) {
+    let cust = null;
+    if (customerId) {
+      cust = (this.state.customers || []).find(c => c.id === customerId);
+    }
+    this.openAddTransactionModal('INCOME');
+    if (cust) {
+      const personInput = document.getElementById('txPersonInput');
+      if (personInput) personInput.value = cust.name;
+      const descInput = document.getElementById('txDescInput');
+      if (descInput) descInput.value = `কাস্টমার বাকি আদায় (পূর্বে বাকি: ৳${cust.currentDue || 0})`;
+      const catSelect = document.getElementById('txCategorySelect');
+      if (catSelect) catSelect.value = 'cat_inc_sales';
+    }
+  },
+
+  /**
+   * ==========================================
+   * 21. SUPPLIERS DIRECTORY & LEDGERS
+   * ==========================================
+   */
+  renderSuppliersView() {
+    const list = this.state.suppliers || [];
+    const totalDue = list.reduce((s, sup) => s + (Number(sup.currentDue) || 0), 0);
+
+    const elDue = document.getElementById('suppliersTotalDue');
+    const elBadge = document.getElementById('suppliersCountBadge');
+    const tbody = document.getElementById('suppliersTableBody');
+
+    if (elDue) elDue.textContent = Utils.formatCurrency(totalDue);
+    if (elBadge) elBadge.textContent = `${Utils.toBanglaNumber(list.length)} জন`;
+
+    if (!tbody) return;
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2.5rem;">কোন মহাজন বা সাপ্লায়ার পাওয়া যায়নি। উপরের বাটনে চাপ দিয়ে যোগ করুন।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map((s, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 600;">${Utils.toBanglaNumber(idx + 1)}</td>
+        <td><strong>${Utils.escapeHTML(s.name)}</strong></td>
+        <td>${s.phone ? `<a href="tel:${s.phone}" style="color: var(--primary-600);">${s.phone}</a>` : '—'}</td>
+        <td>${Utils.escapeHTML(s.company || s.address || '—')}</td>
+        <td style="text-align: right;">${Utils.formatCurrency(s.totalPurchases || 0)}</td>
+        <td style="text-align: right; color: ${s.currentDue > 0 ? '#DC2626' : '#059669'}; font-weight: 700;">${Utils.formatCurrency(s.currentDue || 0)}</td>
+        <td style="text-align: center;">
+          <button class="btn btn-warning btn-sm" style="padding: 3px 8px; font-size: 0.78rem;" onclick="App.openSupplierPaymentModal('${s.id}')">- টাকা পরিশোধ</button>
+          <button class="btn-action-icon" title="এডিট" onclick="App.openSupplierModal('${s.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn-action-icon btn-delete" title="মুছুন" onclick="App.deleteSupplier('${s.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  openSupplierModal(supplierId = null) {
+    const form = document.getElementById('supplierForm');
+    if (form) form.reset();
+    document.getElementById('supplierId').value = supplierId || '';
+    document.getElementById('supplierModalTitle').textContent = supplierId ? 'সাপ্লায়ার তথ্য সম্পাদনা' : 'নতুন মহাজন / সাপ্লায়ার যোগ করুন';
+
+    if (supplierId) {
+      const s = (this.state.suppliers || []).find(sup => sup.id === supplierId);
+      if (s) {
+        document.getElementById('suppNameInput').value = s.name || '';
+        document.getElementById('suppPhoneInput').value = s.phone || '';
+        document.getElementById('suppAddressInput').value = s.company || s.address || '';
+        document.getElementById('suppOpeningDueInput').value = s.currentDue || 0;
+      }
+    }
+    UI.openModal('supplierModal');
+  },
+
+  async handleSaveSupplier(e) {
+    e.preventDefault();
+    const id = document.getElementById('supplierId')?.value || ('supp_' + Date.now());
+    const name = (document.getElementById('suppNameInput')?.value || '').trim();
+    const phone = (document.getElementById('suppPhoneInput')?.value || '').trim();
+    const address = (document.getElementById('suppAddressInput')?.value || '').trim();
+    const openingDue = parseFloat(document.getElementById('suppOpeningDueInput')?.value) || 0;
+
+    if (!name) return;
+
+    const existing = (this.state.suppliers || []).find(s => s.id === id);
+    const supplierObj = {
+      id,
+      accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+      name,
+      phone,
+      company: address,
+      address,
+      currentDue: existing ? (existing.currentDue || 0) : openingDue,
+      totalPurchases: existing ? (existing.totalPurchases || 0) : 0,
+      updatedAt: new Date().toISOString()
+    };
+    if (!existing) supplierObj.createdAt = new Date().toISOString();
+
+    await khataDB.put('suppliers', supplierObj);
+    UI.closeModal('supplierModal');
+    UI.toast('মহাজন / সাপ্লায়ার তথ্য সংরক্ষিত হয়েছে ✓', 'success');
+
+    await this.refreshAllData();
+    this.renderCurrentView();
+  },
+
+  async deleteSupplier(supplierId) {
+    UI.confirm({
+      title: 'সাপ্লায়ার মুছে ফেলবেন?',
+      message: 'আপনি কি নিশ্চিত যে এই সাপ্লায়ারকে মুছে ফেলতে চান?',
+      confirmText: 'মুছে ফেলুন',
+      isDanger: true,
+      onConfirm: async () => {
+        await khataDB.delete('suppliers', supplierId);
+        await this.refreshAllData();
+        this.renderCurrentView();
+        UI.toast('সাপ্লায়ার মুছে ফেলা হয়েছে', 'info');
+      }
+    });
+  },
+
+  openSupplierPaymentModal(supplierId = null) {
+    let sup = null;
+    if (supplierId) {
+      sup = (this.state.suppliers || []).find(s => s.id === supplierId);
+    }
+    this.openAddTransactionModal('EXPENSE_SHOP');
+    if (sup) {
+      const personInput = document.getElementById('txPersonInput');
+      if (personInput) personInput.value = sup.name;
+      const descInput = document.getElementById('txDescInput');
+      if (descInput) descInput.value = `মহাজন পাওনা পরিশোধ (পূর্বে দেনা: ৳${sup.currentDue || 0})`;
+      const catSelect = document.getElementById('txCategorySelect');
+      if (catSelect) catSelect.value = 'cat_exp_stock';
+    }
+  },
+
+  openNewDebtModal() {
+    this.openAddDebtModal();
+  },
+
+  /**
+   * ==========================================
+   * 22. FINANCIAL ACCOUNTS & FUND TRANSFERS
+   * ==========================================
+   */
+  renderAccountsView() {
+    const metrics = Accounting.calculateMetrics(this.state.transactions, this.state.debts, this.state.sales, this.state.saleItems, this.state.products);
+    const grid = document.getElementById('accountsViewGrid');
+    if (!grid) return;
+
+    const accs = [
+      { name: '💵 নগদ ক্যাশ (Cash in Hand)', balance: metrics.accountBalances.Cash || 0, icon: '৳', bg: '#ECFDF5', color: '#059669', type: 'নগদ' },
+      { name: '🏛️ ব্যাংক একাউন্ট (Bank Account)', balance: metrics.accountBalances.Bank || 0, icon: '🏛️', bg: '#EFF6FF', color: '#2563EB', type: 'ব্যাংক' },
+      { name: '📱 বিকাশ ওয়ালেট (bKash)', balance: metrics.accountBalances.bKash || 0, icon: '📱', bg: '#FDF2F8', color: '#DB2777', type: 'এমএফএস' },
+      { name: '📲 নগদ ওয়ালেট (Nagad)', balance: metrics.accountBalances.Nagad || 0, icon: '📲', bg: '#FFFBEB', color: '#D97706', type: 'এমএফএস' },
+      { name: '🚀 রকেট ওয়ালেট (Rocket)', balance: metrics.accountBalances.Rocket || 0, icon: '🚀', bg: '#F5F3FF', color: '#7C3AED', type: 'এমএফএস' },
+      { name: '💳 সর্বমোট তরল ফান্ড', balance: metrics.totalLiquidBalance || 0, icon: '✓', bg: '#1E293B', color: '#FFFFFF', isTotal: true }
+    ];
+
+    grid.innerHTML = accs.map(a => `
+      <div class="account-strip-card" style="${a.isTotal ? 'background: linear-gradient(135deg, #1E293B, #0F172A); color: white;' : ''}">
+        <div class="account-strip-meta">
+          <span class="account-strip-title" style="${a.isTotal ? 'color: rgba(255,255,255,0.85);' : ''}">${a.name}</span>
+          <span class="account-strip-amount" style="${a.isTotal ? 'color: #FFFFFF;' : ''}">${Utils.formatCurrency(a.balance)}</span>
+        </div>
+        <div class="account-strip-icon" style="background: ${a.bg}; color: ${a.color};">${a.icon}</div>
+      </div>
+    `).join('');
+
+    const tbody = document.getElementById('accountsTransfersTableBody');
+    if (!tbody) return;
+
+    const transfers = (this.state.transactions || []).filter(t => t.type === 'TRANSFER');
+    if (transfers.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #94A3B8; padding: 2rem;">কোন স্থানান্তর ইতিহাস নেই। উপরের "ফান্ড ট্রান্সফার" বাটনে চাপ দিয়ে স্থানান্তর করুন।</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = transfers.map((t, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 600;">${Utils.toBanglaNumber(idx + 1)}</td>
+        <td>${Utils.formatDateBengali(t.date)}</td>
+        <td><strong>${t.fromAccount || 'ক্যাশ'} ➔ ${t.toAccount || 'ব্যাংক'}</strong></td>
+        <td>ফান্ড ট্রান্সফার</td>
+        <td style="text-align: right; font-weight: 700; color: #2563EB;">${Utils.formatCurrency(t.amount)}</td>
+        <td>${Utils.escapeHTML(t.description || t.notes || '—')}</td>
+      </tr>
+    `).join('');
+  },
+
+  openTransferModal() {
+    const form = document.getElementById('transferForm');
+    if (form) form.reset();
+    document.getElementById('transferDateInput').value = Utils.getTodayDateString();
+    UI.openModal('transferModal');
+  },
+
+  async handleSaveTransfer(e) {
+    e.preventDefault();
+    const fromAcc = document.getElementById('transferFromSelect')?.value;
+    const toAcc = document.getElementById('transferToSelect')?.value;
+    const amountStr = document.getElementById('transferAmountInput')?.value;
+    const date = document.getElementById('transferDateInput')?.value || Utils.getTodayDateString();
+    const note = (document.getElementById('transferNoteInput')?.value || '').trim();
+
+    const amount = parseFloat(amountStr) || 0;
+    if (amount <= 0) {
+      UI.toast('সঠিক টাকার পরিমাণ দিন', 'warning');
+      return;
+    }
+
+    if (fromAcc === toAcc) {
+      UI.toast('একই একাউন্টে স্থানান্তর সম্ভব নয়। ভিন্ন একাউন্ট নির্বাচন করুন।', 'warning');
+      return;
+    }
+
+    const txId = 'tx_' + Date.now();
+    const transferTx = {
+      id: txId,
+      accountId: this.state.activeAccount?.id || 'acc_rafiqul_main',
+      type: 'TRANSFER',
+      fromAccount: fromAcc,
+      toAccount: toAcc,
+      paymentMethod: fromAcc,
+      amount,
+      date,
+      description: note || `${fromAcc} হতে ${toAcc}-এ ট্রান্সফার`,
+      context: 'TRANSFER',
+      createdAt: new Date().toISOString()
+    };
+
+    await khataDB.put('transactions', transferTx);
+    await khataDB.logAudit('TRANSFER', `${fromAcc} হতে ${toAcc}-এ ৳${amount} ট্রান্সফার`);
+
+    UI.closeModal('transferModal');
+    UI.toast(`৳${Utils.toBanglaNumber(amount)} সফলভাবে ট্রান্সফার হয়েছে! ✓`, 'success');
+
+    await this.refreshAllData();
+    this.renderCurrentView();
+  },
+
+  /**
+   * ==========================================
+   * 23. FAMILY FINANCE VIEW & CONTROLLER
+   * ==========================================
+   */
+  renderFamilyView() {
+    const metrics = Accounting.calculateMetrics(this.state.transactions, this.state.debts, [], [], [], 'FAMILY');
+
+    const elInc = document.getElementById('familyTotalIncome');
+    const elExp = document.getElementById('familyTotalExpenses');
+    const elSav = document.getElementById('familyNetSavings');
+
+    if (elInc) elInc.textContent = Utils.formatCurrency(metrics.familyIncome);
+    if (elExp) elExp.textContent = Utils.formatCurrency(metrics.familyExpenses);
+    if (elSav) elSav.textContent = Utils.formatCurrency(metrics.netFamilySavings);
+
+    const familyList = document.getElementById('familyRecentTxList');
+    if (familyList) {
+      const familyTxs = (this.state.transactions || []).filter(t => 
+        t.expenseType === 'EXPENSE_HOUSE' || 
+        t.category === 'cat_inc_personal' || 
+        (t.category && (t.category.includes('house') || t.category.includes('bazar') || t.category.includes('gas') || t.category.includes('water') || t.category.includes('med') || t.category.includes('edu')))
+      ).slice(0, 6);
+
+      if (familyTxs.length === 0) {
+        familyList.innerHTML = '<div class="empty-state-box" style="padding: 2rem;">সংসার খরচের কোনো এন্ট্রি পাওয়া যায়নি</div>';
+      } else {
+        familyList.innerHTML = familyTxs.map(t => this.renderTransactionRowHTML(t)).join('');
+      }
+    }
+
+    setTimeout(() => {
+      const canvas = document.getElementById('familyExpenseDonutChart');
+      if (canvas && window.KhataCharts) {
+        const catMap = metrics.familyCategories || {};
+        const items = Object.values(catMap).map(c => ({ label: c.name, value: c.amount }));
+        if (items.length > 0) {
+          KhataCharts.drawDonutExpenseChart('familyExpenseDonutChart', items);
+        }
+      }
+    }, 100);
   }
 };
 

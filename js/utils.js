@@ -353,6 +353,117 @@ const Utils = {
     if (remainder > 0) res += convertHundreds(remainder) + ' ';
 
     return (res.trim() + ' টাকা মাত্র');
+  },
+
+  /**
+   * Centralized Language & i18n Support (বাংলা & English)
+   */
+  currentLang: 'bn',
+
+  translations: {
+    bn: {
+      appName: 'RI Family & Business Hisab',
+      tagline: 'ব্যবসা ও সংসারের হিসাব—সব এক জায়গায়।',
+      dashboard: 'ড্যাশবোর্ড',
+      transactions: 'লেনদেন খতিয়ান',
+      debts: 'ধার-বাকি খাতা',
+      products: 'পণ্য ও স্টক খাতা',
+      reports: 'রিপোর্ট ও এনালাইটিক্স',
+      budget: 'মাসিক বাজেট',
+      savings: 'সঞ্চয় লক্ষ্য',
+      settings: 'সেটিংস ও প্রোফাইল',
+      sales: 'বিক্রি (POS)',
+      purchases: 'ক্রয় ও মহাজন',
+      customers: 'কাস্টমার তালিকা',
+      suppliers: 'সাপ্লায়ার / মহাজন',
+      cashBank: 'ক্যাশ ও ব্যাংক',
+      dailyClosing: 'দৈনিক ক্যাশ ক্লোজিং',
+      quickAdd: 'দ্রুত হিসাব যোগ',
+      totalBalance: 'মোট ব্যালেন্স',
+      cashInHand: 'ক্যাশ ইন হ্যান্ড',
+      bankBalance: 'ব্যাংক ব্যালেন্স',
+      todaySales: 'আজকের বিক্রি',
+      todayExpenses: 'আজকের খরচ',
+      todayProfit: 'আজকের লাভ',
+      save: 'সংরক্ষণ করুন',
+      cancel: 'বাতিল',
+      delete: 'মুছে ফেলুন',
+      undo: 'পূর্বাবস্থায় আনুন',
+      edit: 'সম্পাদনা',
+      print: 'প্রিন্ট করুন',
+      download: 'ডাউনলোড'
+    },
+    en: {
+      appName: 'RI Family & Business Hisab',
+      tagline: 'Business & Household Accounts in One Place.',
+      dashboard: 'Dashboard',
+      transactions: 'Transactions',
+      debts: 'Due & Credit Ledger',
+      products: 'Products & Inventory',
+      reports: 'Reports & Analytics',
+      budget: 'Monthly Budget',
+      savings: 'Saving Goals',
+      settings: 'Settings & Profile',
+      sales: 'Sales (POS)',
+      purchases: 'Purchases',
+      customers: 'Customers',
+      suppliers: 'Suppliers',
+      cashBank: 'Cash & Bank',
+      dailyClosing: 'Daily Cash Closing',
+      quickAdd: 'Quick Add',
+      totalBalance: 'Total Balance',
+      cashInHand: 'Cash in Hand',
+      bankBalance: 'Bank Balance',
+      todaySales: "Today's Sales",
+      todayExpenses: "Today's Expenses",
+      todayProfit: "Today's Profit",
+      save: 'Save',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      undo: 'Undo',
+      edit: 'Edit',
+      print: 'Print',
+      download: 'Download'
+    }
+  },
+
+  t(key, fallback = '') {
+    const lang = this.currentLang || 'bn';
+    const dict = this.translations[lang] || this.translations.bn;
+    return dict[key] || fallback || key;
+  },
+
+  setLanguage(lang = 'bn') {
+    this.currentLang = (lang === 'en') ? 'en' : 'bn';
+    try {
+      localStorage.setItem('ri_hisab_lang', this.currentLang);
+    } catch (e) {}
+  },
+
+  /**
+   * Validate full JSON backup file before restoring
+   */
+  validateBackupObject(obj) {
+    if (!obj || typeof obj !== 'object') {
+      return { valid: false, error: 'অবৈধ ফাইল ফরম্যাট!' };
+    }
+    if (!obj.stores || typeof obj.stores !== 'object') {
+      return { valid: false, error: 'ব্যাকআপে কোনো ডাটা স্টোর পাওয়া যায়নি!' };
+    }
+    const storeCount = Object.keys(obj.stores).length;
+    if (storeCount === 0) {
+      return { valid: false, error: 'ব্যাকআপ ফাইলটি সম্পূর্ণ খালি!' };
+    }
+    return { valid: true, storeCount, exportedAt: obj.exportedAt };
+  },
+
+  /**
+   * Generate SKU / Barcode text
+   */
+  generateSKU(prefix = 'RI', name = '') {
+    const cleanPrefix = prefix.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 4) || 'RI';
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `${cleanPrefix}-${Date.now().toString().slice(-4)}-${rand}`;
   }
 };
 

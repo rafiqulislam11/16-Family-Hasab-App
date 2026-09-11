@@ -298,6 +298,183 @@ const UI = {
     setTimeout(() => {
       window.print();
     }, 150);
+  },
+
+  /**
+   * Undo Toast Notification with Countdown
+   */
+  undoToast(message, onUndo, duration = 6000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'khata-toast toast-undo';
+    toast.innerHTML = `
+      <div class="toast-icon">🗑️</div>
+      <div class="toast-message">${message}</div>
+      <button type="button" class="btn-undo-action" id="toastUndoBtn">পূর্বাবস্থায় আনুন (Undo)</button>
+    `;
+
+    container.appendChild(toast);
+
+    let undone = false;
+    const undoBtn = toast.querySelector('#toastUndoBtn');
+    if (undoBtn) {
+      undoBtn.onclick = () => {
+        undone = true;
+        toast.classList.remove('show');
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 200);
+        if (typeof onUndo === 'function') onUndo();
+        UI.toast('পূর্বের অবস্থা সফলভাবে ফিরিয়ে আনা হয়েছে ✓', 'success', 2500);
+      };
+    }
+
+    requestAnimationFrame(() => {
+      toast.classList.add('show');
+    });
+
+    setTimeout(() => {
+      if (!undone && toast.parentNode) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 300);
+      }
+    }, duration);
+  },
+
+  /**
+   * Printable Professional Invoice / Memo (RI Family & Business Hisab)
+   */
+  printInvoice({ profile = {}, invoiceNo = '', date = '', customer = {}, items = [], totals = {}, paymentMethod = 'Cash', note = '' }) {
+    const printArea = document.getElementById('printableArea');
+    if (!printArea) return;
+
+    const bizName = profile.businessName || 'RI Family & Business Hisab';
+    const ownerName = profile.ownerName || 'রফিকুল ইসলাম';
+    const phone = profile.phone || '0131082-4987';
+    const address = profile.address || 'বাংলাদেশ';
+    const tagline = profile.tagline || 'ব্যবসা ও সংসারের হিসাব—সব এক জায়গায়।';
+
+    let itemRows = '';
+    (items || []).forEach((item, idx) => {
+      const rate = Number(item.rate || item.price || item.sellingPrice) || 0;
+      const qty = Number(item.qty || item.quantity) || 1;
+      const lineTotal = Number(item.total !== undefined ? item.total : (rate * qty)) || 0;
+
+      itemRows += `
+        <tr>
+          <td style="text-align: center;">${Utils.toBanglaNumber(idx + 1, false)}</td>
+          <td><strong>${item.name || item.productName || 'পণ্য'}</strong></td>
+          <td style="text-align: center;">${Utils.toBanglaNumber(qty, false)} ${item.unit || ''}</td>
+          <td style="text-align: right;">${Utils.formatCurrency(rate, false)}</td>
+          <td style="text-align: right; font-weight: bold;">${Utils.formatCurrency(lineTotal, false)}</td>
+        </tr>
+      `;
+    });
+
+    const subtotal = totals.subtotal !== undefined ? totals.subtotal : (totals.todayBill || 0);
+    const discount = totals.discount || 0;
+    const oldDue = totals.oldDue || 0;
+    const grandTotal = totals.totalDue !== undefined ? totals.totalDue : (subtotal + oldDue - discount);
+    const paid = totals.paid !== undefined ? totals.paid : (totals.todayPaid || 0);
+    const due = totals.due !== undefined ? totals.due : (totals.netDue || Math.max(0, grandTotal - paid));
+
+    printArea.innerHTML = `
+      <div class="print-voucher print-invoice">
+        <div class="print-header" style="text-align: center; border-bottom: 2px solid #1E3A8A; padding-bottom: 12px;">
+          <div style="font-size: 13px; font-weight: 700; color: #1E3A8A; letter-spacing: 1px; margin-bottom: 2px;">RI Family &amp; Business Hisab</div>
+          <div class="print-shop-name" style="font-size: 24px; font-weight: 800; color: #0F172A;">${bizName}</div>
+          <div class="print-shop-owner" style="font-size: 13px; color: #475569;">প্রোপ্রাইটর: ${ownerName} | মোবাইল: ${phone}</div>
+          <div class="print-shop-contact" style="font-size: 12px; color: #64748B;">${address}</div>
+          <div style="font-size: 11px; color: #059669; font-style: italic; margin-top: 3px;">“${tagline}”</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin: 14px 0; font-size: 13px; background: #F8FAFC; padding: 10px 14px; border-radius: 8px; border: 1px solid #E2E8F0;">
+          <div>
+            <div><strong>চালান / মেমো নং:</strong> <span style="font-family: monospace; font-weight: 800; color: #1E3A8A;">${invoiceNo || 'INV-001'}</span></div>
+            <div><strong>তারিখ:</strong> ${Utils.formatDateBengali(date || Utils.getTodayDateString())}</div>
+            <div><strong>পরিশোধ মাধ্যম:</strong> ${paymentMethod}</div>
+          </div>
+          <div style="text-align: right;">
+            <div><strong>কাস্টমার:</strong> <span style="font-weight: 700; font-size: 15px;">${customer.name || customer.person || 'সম্মানিত ক্রেতা'}</span></div>
+            ${customer.phone ? `<div><strong>ফোন:</strong> ${customer.phone}</div>` : ''}
+            ${customer.address ? `<div><strong>ঠিকানা:</strong> ${customer.address}</div>` : ''}
+          </div>
+        </div>
+
+        <table class="print-table" style="width: 100%; margin-top: 10px;">
+          <thead>
+            <tr style="background: #1E3A8A; color: #FFFFFF;">
+              <th style="width: 40px; text-align: center;">#</th>
+              <th>পণ্যের বিবরণ</th>
+              <th style="width: 80px; text-align: center;">পরিমাণ</th>
+              <th style="width: 90px; text-align: right;">দর (৳)</th>
+              <th style="width: 100px; text-align: right;">মোট (৳)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemRows}
+          </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+          <div style="width: 280px; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid #E2E8F0; font-size: 13px;">
+              <span>বর্তমান পণ্যের মোট:</span>
+              <strong>${Utils.formatCurrency(subtotal)}</strong>
+            </div>
+            ${discount > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid #E2E8F0; font-size: 13px; color: #059669;">
+              <span>ছাড় / ডিসকাউন্ট:</span>
+              <strong>- ${Utils.formatCurrency(discount)}</strong>
+            </div>` : ''}
+            ${oldDue > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid #E2E8F0; font-size: 13px; color: #D97706;">
+              <span>পূর্বের বকেয়া বাকি:</span>
+              <strong>+ ${Utils.formatCurrency(oldDue)}</strong>
+            </div>` : ''}
+            <div style="display: flex; justify-content: space-between; padding: 7px 12px; background: #F1F5F9; font-size: 14px; font-weight: 800; border-bottom: 1px solid #CBD5E1;">
+              <span>সর্বমোট পাওনা:</span>
+              <span>${Utils.formatCurrency(grandTotal)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid #E2E8F0; font-size: 13px; color: #059669;">
+              <span>আজকের জমা / পেইড:</span>
+              <strong>${Utils.formatCurrency(paid)}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 12px; font-size: 15px; font-weight: 800; color: ${due > 0 ? '#DC2626' : '#059669'}; background: ${due > 0 ? '#FEF2F2' : '#F0FDF4'};">
+              <span>বর্তমান অবশিষ্টাংশ বাকি:</span>
+              <span>${Utils.formatCurrency(due)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px; font-size: 13px; color: #334155; padding: 8px 12px; background: #F8FAFC; border-radius: 6px;">
+          <strong>কথায়:</strong> ${Utils.numberToBanglaWords(due > 0 ? due : (paid > 0 ? paid : grandTotal))}
+        </div>
+
+        ${note ? `<div style="margin-top: 6px; font-size: 12px; color: #64748B;"><em>নোট: ${note}</em></div>` : ''}
+
+        <div class="print-footer" style="margin-top: 45px; display: flex; justify-content: space-between;">
+          <div class="print-sign-col" style="text-align: left;">
+            <div class="print-sign-line" style="width: 180px; border-top: 1px dashed #64748B; padding-top: 4px; font-size: 12px;">ক্রেতার স্বাক্ষর</div>
+          </div>
+          <div class="print-sign-col" style="text-align: right;">
+            <div class="print-sign-line" style="width: 180px; border-top: 1px dashed #64748B; padding-top: 4px; font-size: 12px;">কর্তৃপক্ষের সিল ও স্বাক্ষর</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 25px; font-size: 11px; color: #94A3B8; border-top: 1px solid #E2E8F0; padding-top: 8px;">
+          ধন্যবাদ! আবার আসবেন। • Powered by RI Family &amp; Business Hisab
+        </div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      window.print();
+    }, 150);
   }
 };
 

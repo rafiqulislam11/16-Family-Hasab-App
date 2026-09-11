@@ -1,13 +1,13 @@
 {
-  "name": "সহজ খাতা — দোকান, ব্যবসা ও সংসারের সহজ হিসাব",
-  "short_name": "সহজ খাতা",
-  "description": "দোকানদার, ক্ষুদ্র ব্যবসায়ী ও পরিবারের নির্ভরযোগ্য ডিজিটাল সহজ খাতা",
+  "name": "RI Family & Business Hisab",
+  "short_name": "RI হিসাব",
+  "description": "ব্যবসা ও সংসারের হিসাব—সব এক জায়গায়।",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#F8FAFC",
-  "theme_color": "#2563EB",
+  "theme_color": "#1E3A8A",
   "lang": "bn",
   "dir": "ltr",
   "categories": ["finance", "business", "productivity", "utilities"],
@@ -33,24 +33,31 @@
   ],
   "shortcuts": [
     {
-      "name": "হিসাব যোগ করুন",
-      "short_name": "নতুন হিসাব",
-      "description": "নতুন আয় বা খরচ এন্ট্রি করুন",
-      "url": "./index.html?action=add-transaction",
+      "name": "দ্রুত হিসাব যোগ",
+      "short_name": "হিসাব যোগ",
+      "description": "নতুন বিক্রি, আয় বা খরচ এন্ট্রি করুন",
+      "url": "./index.html?action=quick-add",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "ধার-বাকি খাতা",
-      "short_name": "ধার-বাকি",
-      "description": "দেনা-পাওনার হিসাব দেখুন",
-      "url": "./index.html?section=debts",
+      "name": "পিওএস বিক্রি",
+      "short_name": "বিক্রি",
+      "description": "নতুন কাস্টমার বিক্রি ও মেমো",
+      "url": "./index.html?section=pos-sale",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "মাসিক রিপোর্ট",
-      "short_name": "রিপোর্ট",
-      "description": "আয়-ব্যয় ও লাভের বিশ্লেষণ",
-      "url": "./index.html?section=reports",
+      "name": "বাকি খাতা (দেনা-পাওনা)",
+      "short_name": "বাকি খাতা",
+      "description": "কাস্টমার ও সাপ্লায়ার দেনা-পাওনার হিসাব",
+      "url": "./index.html?section=due",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "পারিবারিক হিসাব",
+      "short_name": "সংসার হিসাব",
+      "description": "পারিবারিক আয়, সংসার খরচ ও বাজেট",
+      "url": "./index.html?section=family",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]

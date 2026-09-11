@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>সহজ খাতা — দোকান, ব্যবসা ও সংসারের সহজ হিসাব</title>
-  <meta name="description" content="দোকানদার, ব্যবসায়ী ও পরিবারের জন্য সহজ, নির্ভুল এবং নির্ভরযোগ্য আধুনিক হিসাবের সহজ খাতা PWA">
-  <meta name="theme-color" content="#2563EB">
+  <title>RI Family & Business Hisab — ব্যবসা ও সংসারের হিসাব—সব এক জায়গায়।</title>
+  <meta name="description" content="দোকান, ক্ষুদ্র-মাঝারি ব্যবসা ও পরিবারের পূর্ণাঙ্গ আধুনিক হিসাবের বিশ্বস্ত অ্যাপ।">
+  <meta name="theme-color" content="#1E3A8A">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="সহজ খাতা">
+  <meta name="apple-mobile-web-app-title" content="RI হিসাব">
   
   <!-- Icons & PWA Manifest -->
   <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
@@ -33,20 +33,21 @@
     <aside id="appSidebar" class="sidebar">
       <div class="sidebar-header">
         <div class="brand-logo-wrap">
-          <img src="icons/favicon.svg" alt="সহজ খাতা লোগো">
+          <img src="icons/favicon.svg" alt="RI Hisab লোগো">
         </div>
         <div class="brand-info">
           <div class="brand-title-row">
-            <span class="brand-title">সহজ খাতা</span>
-            <span class="brand-ver-badge">v২.১</span>
+            <span class="brand-title">RI Hisab</span>
+            <span class="brand-ver-badge">v৩.০</span>
           </div>
-          <span class="brand-tagline">দোকান ও সংসার হিসাব</span>
+          <span class="brand-tagline">ব্যবসা ও সংসার হিসাব</span>
         </div>
+        <button type="button" class="sidebar-close-btn" onclick="toggleSidebar(false)" aria-label="মেনু বন্ধ করুন" title="বন্ধ করুন">✕</button>
       </div>
 
       <nav class="sidebar-nav">
-        <!-- সেকশন ১: মূল হিসাব -->
-        <div class="nav-section-title">মূল খাতা ও লেনদেন</div>
+        <!-- সেকশন ১: ব্যবসা হিসাব (BUSINESS) -->
+        <div class="nav-section-title">ব্যবসা হিসাব (BUSINESS)</div>
 
         <a class="nav-item active" data-view="dashboard" onclick="navigateView('dashboard')" title="প্রধান ড্যাশবোর্ড">
           <div class="nav-icon-wrap">
@@ -55,7 +56,7 @@
           <span class="nav-label">ড্যাশবোর্ড</span>
         </a>
 
-        <a class="nav-item" data-view="transactions" onclick="navigateView('transactions')" title="সকল আয় ও ব্যয়ের তালিকা">
+        <a class="nav-item" data-view="transactions" onclick="navigateView('transactions')" title="সকল আয়, খরচ ও লেনদেন">
           <div class="nav-icon-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           </div>
@@ -63,29 +64,64 @@
           <span id="sidebarTxCount" class="nav-badge">০</span>
         </a>
 
-        <a class="nav-item" data-view="debts" onclick="navigateView('debts')" title="পাওনা ও দেনা খাতা">
-          <div class="nav-icon-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <a class="nav-item" data-view="sales" onclick="navigateView('sales')" title="পিওএস কাস্টমার বিক্রি">
+          <div class="nav-icon-wrap" style="color: #10B981;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           </div>
-          <span class="nav-label">ধার-বাকি খাতা</span>
+          <span class="nav-label">বিক্রি (POS)</span>
+        </a>
+
+        <a class="nav-item" data-view="purchases" onclick="navigateView('purchases')" title="মহাজন থেকে পণ্য ক্রয়">
+          <div class="nav-icon-wrap" style="color: #F59E0B;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          </div>
+          <span class="nav-label">মালামাল ক্রয়</span>
         </a>
 
         <a class="nav-item" data-view="products" onclick="navigateView('products')" title="পণ্য তালিকা ও ইনভেন্টরি">
           <div class="nav-icon-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
           </div>
           <span class="nav-label">পণ্য ও স্টক খাতা</span>
           <span id="sidebarProductCount" class="nav-badge">০</span>
         </a>
 
-        <!-- সেকশন ২: বিশ্লেষণ ও পরিকল্পনা -->
-        <div class="nav-section-title">রিপোর্ট ও পরিকল্পনা</div>
-
-        <a class="nav-item" data-view="reports" onclick="navigateView('reports')" title="মাসিক ও বাৎসরিক হিসাব রিপোর্ট">
-          <div class="nav-icon-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <a class="nav-item" data-view="customers" onclick="navigateView('customers')" title="কাস্টমার ডিরেক্টরি ও লেজার">
+          <div class="nav-icon-wrap" style="color: #3B82F6;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
-          <span class="nav-label">রিপোর্ট ও এনালাইটিক্স</span>
+          <span class="nav-label">কাস্টমার তালিকা</span>
+        </a>
+
+        <a class="nav-item" data-view="suppliers" onclick="navigateView('suppliers')" title="মহাজন / সাপ্লায়ার খাতা">
+          <div class="nav-icon-wrap" style="color: #8B5CF6;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <span class="nav-label">সাপ্লায়ার / মহাজন</span>
+        </a>
+
+        <a class="nav-item" data-view="debts" onclick="navigateView('debts')" title="পাওনা ও দেনা খাতা">
+          <div class="nav-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          </div>
+          <span class="nav-label">ধার-বাকি খাতা</span>
+        </a>
+
+        <a class="nav-item" data-view="accounts" onclick="navigateView('accounts')" title="ক্যাশ, ব্যাংক ও ওয়ালেট">
+          <div class="nav-icon-wrap" style="color: #0D9488;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <span class="nav-label">ক্যাশ ও ব্যাংক</span>
+        </a>
+
+        <!-- সেকশন ২: পারিবারিক হিসাব (FAMILY) -->
+        <div class="nav-section-title">পারিবারিক হিসাব (FAMILY)</div>
+
+        <a class="nav-item" data-view="family" onclick="navigateView('family')" title="সংসার আয়, ব্যয় ও সঞ্চয়">
+          <div class="nav-icon-wrap" style="color: #EC4899;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <span class="nav-label">সংসার হিসাব</span>
         </a>
 
         <a class="nav-item" data-view="budget" onclick="navigateView('budget')" title="মাসের খরচের বাজেট">
@@ -102,18 +138,29 @@
           <span class="nav-label">সঞ্চয় লক্ষ্য</span>
         </a>
 
-        <!-- সেকশন ৩: সেটিংস ও টুলস -->
-        <div class="nav-section-title">মার্কেটিং ও বিজনেস কার্ড</div>
+        <!-- সেকশন ৩: রিপোর্ট ও সিস্টেম -->
+        <div class="nav-section-title">রিপোর্ট ও সিস্টেম</div>
 
-        <a class="nav-item" onclick="App.openBusinessCardModal()" title="দোকানের নিজস্ব বিজনেস কার্ড / ভিজিটিং কার্ড প্রস্তুতকারক" style="cursor: pointer;">
+        <a class="nav-item" data-view="reports" onclick="navigateView('reports')" title="মাসিক ও বাৎসরিক হিসাব রিপোর্ট">
+          <div class="nav-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <span class="nav-label">রিপোর্ট ও এনালাইটিক্স</span>
+        </a>
+
+        <a class="nav-item" onclick="App.openCashClosingModal()" title="দিনের শেষে ক্যাশ ড্রয়ার হিসাব মিলানো" style="cursor: pointer;">
+          <div class="nav-icon-wrap" style="color: #059669;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <span class="nav-label">ক্যাশ ড্রয়ার ক্লোজিং</span>
+        </a>
+
+        <a class="nav-item" onclick="App.openBusinessCardModal()" title="দোকানের নিজস্ব বিজনেস কার্ড প্রস্তুতকারক" style="cursor: pointer;">
           <div class="nav-icon-wrap" style="color: #D97706;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><circle cx="6.5" cy="15" r="1.5"/></svg>
           </div>
           <span class="nav-label">ভিজিটিং কার্ড</span>
-          <span class="nav-badge" style="background: #FEF3C7; color: #92400E; border-color: #FCD34D;">কার্ড মেকার</span>
         </a>
-
-        <div class="nav-section-title">সিস্টেম ও ব্যাকআপ</div>
 
         <a class="nav-item" data-view="settings" onclick="navigateView('settings')" title="অ্যাপ সেটিংস ও ব্যাকআপ">
           <div class="nav-icon-wrap">
@@ -192,6 +239,18 @@
         </div>
 
         <div class="topbar-right">
+          <!-- Global Context Switcher (Business / Family / Combined) -->
+          <div class="context-switcher-wrap" id="topbarContextSwitcher">
+            <button type="button" class="context-pill-btn active" data-context="ALL" onclick="App.switchContext('ALL')" title="উভয় হিসাব একত্রে">🌐 সমন্বিত</button>
+            <button type="button" class="context-pill-btn" data-context="BUSINESS" onclick="App.switchContext('BUSINESS')" title="শুধুমাত্র ব্যবসা হিসাব">🏢 ব্যবসা</button>
+            <button type="button" class="context-pill-btn" data-context="FAMILY" onclick="App.switchContext('FAMILY')" title="শুধুমাত্র সংসার হিসাব">🏠 সংসার</button>
+          </div>
+
+          <!-- Global Search Trigger Button -->
+          <button class="header-action-btn search-trigger-btn" onclick="App.openGlobalSearch()" title="সার্চ করুন (Ctrl+K)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+
           <!-- Active Business Account Switcher Button -->
           <button class="topbar-account-btn" id="topbarAccountBtn" onclick="App.openAuthModal()" title="ব্যবসা পরিবর্তন বা লগইন">
             <div class="account-avatar-circle" id="topbarAvatarContainer">
@@ -230,10 +289,10 @@
             <span>ক্যাশ মেমো</span>
           </button>
 
-          <!-- Add Transaction Header Button (Desktop) -->
-          <button class="btn btn-primary topbar-add-btn" onclick="App.openAddTransactionModal()">
+          <!-- Quick Add Button (Desktop) -->
+          <button class="btn btn-primary topbar-add-btn" onclick="App.openQuickAddModal()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>নতুন হিসাব</span>
+            <span>+ দ্রুত হিসাব</span>
           </button>
         </div>
       </header>
@@ -245,6 +304,38 @@
              1. DASHBOARD VIEW
              ========================================== -->
         <section id="view-dashboard" class="app-view active">
+
+          <!-- Financial Accounts Overview Strip -->
+          <div class="accounts-overview-strip" id="dashboardAccountsStrip">
+            <div class="account-strip-card" onclick="navigateView('accounts')" style="cursor: pointer;" title="নগদ ক্যাশ হিসাব">
+              <div class="account-strip-meta">
+                <span class="account-strip-title">💵 নগদ (Cash)</span>
+                <span class="account-strip-amount" id="dashAccCash">৳ ০</span>
+              </div>
+              <div class="account-strip-icon" style="background: #ECFDF5; color: #059669;">৳</div>
+            </div>
+            <div class="account-strip-card" onclick="navigateView('accounts')" style="cursor: pointer;" title="ব্যাংক হিসাব">
+              <div class="account-strip-meta">
+                <span class="account-strip-title">🏛️ ব্যাংক (Bank)</span>
+                <span class="account-strip-amount" id="dashAccBank">৳ ০</span>
+              </div>
+              <div class="account-strip-icon" style="background: #EFF6FF; color: #2563EB;">🏛️</div>
+            </div>
+            <div class="account-strip-card" onclick="navigateView('accounts')" style="cursor: pointer;" title="মোবাইল ওয়ালেট">
+              <div class="account-strip-meta">
+                <span class="account-strip-title">📱 মোবাইল ওয়ালেট</span>
+                <span class="account-strip-amount" id="dashAccMobile">৳ ০</span>
+              </div>
+              <div class="account-strip-icon" style="background: #FFFBEB; color: #D97706;">📱</div>
+            </div>
+            <div class="account-strip-card" style="border-color: #2563EB; background: linear-gradient(135deg, #1E3A8A, #2563EB); color: #FFFFFF;" title="সর্বমোট জমা তারল্য">
+              <div class="account-strip-meta">
+                <span class="account-strip-title" style="color: rgba(255,255,255,0.85);">💳 সর্বমোট ব্যালেন্স</span>
+                <span class="account-strip-amount" id="dashAccTotal" style="color: #FFFFFF;">৳ ০</span>
+              </div>
+              <div class="account-strip-icon" style="background: rgba(255,255,255,0.2); color: #FFFFFF;">✓</div>
+            </div>
+          </div>
           
           <!-- Fast Action Buttons Bar (কমপ্যাক্ট ও সহজ এন্ট্রি) -->
           <div class="fast-entry-section">
@@ -1351,38 +1442,467 @@
 
         </section>
 
+        <!-- ==========================================
+             9. SALES MODULE VIEW (POS)
+             ========================================== -->
+        <section id="view-sales" class="app-view">
+          <div class="view-header-row">
+            <div>
+              <h2 class="view-title">🛒 পিওএস বিক্রি ও বিক্রয় চালান</h2>
+              <p class="view-subtitle">দোকানের প্রতিটি বিক্রি, নগদ ক্যাশ ও কাস্টমার বাকির হিসাব</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="App.openPOSSaleModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ নতুন পিওএস বিক্রি</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Sales Summary Stats -->
+          <div class="metrics-grid">
+            <div class="metric-card card-sales">
+              <div class="metric-card-top">
+                <span class="metric-label">আজকের মোট বিক্রি</span>
+                <div class="metric-icon-circle">🛒</div>
+              </div>
+              <div class="metric-value" id="salesTodayTotal">৳ ০</div>
+              <span class="metric-hint" id="salesTodayCount">০ টি চালান</span>
+            </div>
+            <div class="metric-card card-income">
+              <div class="metric-card-top">
+                <span class="metric-label">আজকের নগদ আদায়</span>
+                <div class="metric-icon-circle">💵</div>
+              </div>
+              <div class="metric-value" id="salesTodayPaid">৳ ০</div>
+              <span class="metric-hint">ক্যাশ ও ডিজিটাল জমা</span>
+            </div>
+            <div class="metric-card card-danger">
+              <div class="metric-card-top">
+                <span class="metric-label">আজকের নতুন বাকি</span>
+                <div class="metric-icon-circle">⚠️</div>
+              </div>
+              <div class="metric-value" id="salesTodayDue">৳ ০</div>
+              <span class="metric-hint">বকেয়া পাওনা</span>
+            </div>
+            <div class="metric-card card-profit">
+              <div class="metric-card-top">
+                <span class="metric-label">চলতি মাসের বিক্রি</span>
+                <div class="metric-icon-circle">📈</div>
+              </div>
+              <div class="metric-value" id="salesMonthTotal">৳ ০</div>
+              <span class="metric-hint">মাসিক মোট বিক্রয়</span>
+            </div>
+          </div>
+
+          <!-- Sales Filter Bar & Table -->
+          <div class="card" style="margin-top: 1.25rem;">
+            <div class="card-header">
+              <span class="card-title">বিক্রয় চালানের তালিকা</span>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="salesSearchInput" class="form-control" placeholder="কাস্টমার বা চালান নং খুঁজুন..." oninput="App.renderSalesList()" style="width: 220px; font-size: 0.88rem;">
+              </div>
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">#</th>
+                      <th>চালান নং</th>
+                      <th>তারিখ</th>
+                      <th>কাস্টমার</th>
+                      <th style="text-align: right;">মোট মূল্য</th>
+                      <th style="text-align: right;">জমা / পেইড</th>
+                      <th style="text-align: right;">বাকি</th>
+                      <th style="text-align: center;">অ্যাকশন</th>
+                    </tr>
+                  </thead>
+                  <tbody id="salesTableBody">
+                    <tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2rem;">কোন বিক্রয় চালান নেই</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- ==========================================
+             10. PURCHASES MODULE VIEW
+             ========================================== -->
+        <section id="view-purchases" class="app-view">
+          <div class="view-header-row">
+            <div>
+              <h2 class="view-title">📦 মালামাল ক্রয় ও সরবরাহকারী চালান</h2>
+              <p class="view-subtitle">পাইকারি বাজার ও ডিলার থেকে পণ্য ক্রয়ের নিখুঁত খতিয়ান</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-warning" onclick="App.openPurchaseModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ নতুন ক্রয় চালান</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Purchase Summary Stats -->
+          <div class="metrics-grid">
+            <div class="metric-card card-warning">
+              <div class="metric-card-top">
+                <span class="metric-label">আজকের মোট ক্রয়</span>
+                <div class="metric-icon-circle">📦</div>
+              </div>
+              <div class="metric-value" id="purchaseTodayTotal">৳ ০</div>
+              <span class="metric-hint">মালামাল ক্রয় চালান</span>
+            </div>
+            <div class="metric-card card-expense">
+              <div class="metric-card-top">
+                <span class="metric-label">নগদ পরিশোধ</span>
+                <div class="metric-icon-circle">💸</div>
+              </div>
+              <div class="metric-value" id="purchaseTodayPaid">৳ ০</div>
+              <span class="metric-hint">পরিশোধিত অর্থ</span>
+            </div>
+            <div class="metric-card card-danger">
+              <div class="metric-card-top">
+                <span class="metric-label">মহাজন বকেয়া (Payable)</span>
+                <div class="metric-icon-circle">🏛️</div>
+              </div>
+              <div class="metric-value" id="purchaseTodayDue">৳ ০</div>
+              <span class="metric-hint">নতুন দেনা</span>
+            </div>
+            <div class="metric-card card-profit">
+              <div class="metric-card-top">
+                <span class="metric-label">চলতি মাসের মোট ক্রয়</span>
+                <div class="metric-icon-circle">📊</div>
+              </div>
+              <div class="metric-value" id="purchaseMonthTotal">৳ ০</div>
+              <span class="metric-hint">মাসিক স্টক ইনভেস্টমেন্ট</span>
+            </div>
+          </div>
+
+          <!-- Purchases Table -->
+          <div class="card" style="margin-top: 1.25rem;">
+            <div class="card-header">
+              <span class="card-title">ক্রয় চালানের ইতিহাস</span>
+              <input type="text" id="purchaseSearchInput" class="form-control" placeholder="মহাজন বা চালান নং খুঁজুন..." oninput="App.renderPurchasesList()" style="width: 220px; font-size: 0.88rem;">
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">#</th>
+                      <th>চালান নং</th>
+                      <th>তারিখ</th>
+                      <th>মহাজন / সাপ্লায়ার</th>
+                      <th style="text-align: right;">মোট বিল</th>
+                      <th style="text-align: right;">পরিশোধ</th>
+                      <th style="text-align: right;">বকেয়া দেনা</th>
+                      <th style="text-align: center;">অ্যাকশন</th>
+                    </tr>
+                  </thead>
+                  <tbody id="purchasesTableBody">
+                    <tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2rem;">কোন ক্রয় চালান নেই</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             11. CUSTOMERS DIRECTORY VIEW
+             ========================================== -->
+        <section id="view-customers" class="app-view">
+          <div class="view-header-row">
+            <div>
+              <h2 class="view-title">👥 কাস্টমার ডিরেক্টরি ও বাকি খাতা</h2>
+              <p class="view-subtitle">সকল কাস্টমারের তালিকা, লেনদেনের ইতিহাস ও বকেয়া পাওনা</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="App.openCustomerModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ নতুন কাস্টমার</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card card-income">
+              <div class="metric-card-top">
+                <span class="metric-label">মোট কাস্টমার</span>
+                <div class="metric-icon-circle">👥</div>
+              </div>
+              <div class="metric-value" id="custTotalCount">০ জন</div>
+              <span class="metric-hint">নিবন্ধিত কাস্টমার</span>
+            </div>
+            <div class="metric-card card-sales">
+              <div class="metric-card-top">
+                <span class="metric-label">মোট কাস্টমার বিক্রি</span>
+                <div class="metric-icon-circle">🛒</div>
+              </div>
+              <div class="metric-value" id="custTotalSales">৳ ০</div>
+              <span class="metric-hint">সর্বমোট বিক্রয়</span>
+            </div>
+            <div class="metric-card card-danger">
+              <div class="metric-card-top">
+                <span class="metric-label">মোট কাস্টমার বাকি (আমি পাব)</span>
+                <div class="metric-icon-circle">⚠️</div>
+              </div>
+              <div class="metric-value" id="custTotalReceivable">৳ ০</div>
+              <span class="metric-hint">কাস্টমার বকেয়া পাওনা</span>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 1.25rem;">
+            <div class="card-header">
+              <span class="card-title">কাস্টমার তালিকা</span>
+              <input type="text" id="custSearchInput" class="form-control" placeholder="নাম বা মোবাইল নম্বর..." oninput="App.renderCustomersList()" style="width: 240px; font-size: 0.88rem;">
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">#</th>
+                      <th>নাম</th>
+                      <th>মোবাইল নম্বর</th>
+                      <th>ঠিকানা</th>
+                      <th style="text-align: right;">মোট বিক্রি</th>
+                      <th style="text-align: right;">পরিশোধ</th>
+                      <th style="text-align: right;">বর্তমান বাকি</th>
+                      <th style="text-align: center;">অ্যাকশন</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customersTableBody">
+                    <tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2rem;">কোন কাস্টমার পাওয়া যায়নি</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             12. SUPPLIERS DIRECTORY VIEW
+             ========================================== -->
+        <section id="view-suppliers" class="app-view">
+          <div class="view-header-row">
+            <div>
+              <h2 class="view-title">🏢 মহাজন / সরবরাহকারী খাতা</h2>
+              <p class="view-subtitle">ডিলার ও পাইকারি মহাজনদের তালিকা ও বকেয়া দেনা (আমি দেব)</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-warning" onclick="App.openSupplierModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ নতুন সাপ্লায়ার</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card card-warning">
+              <div class="metric-card-top">
+                <span class="metric-label">মোট সাপ্লায়ার</span>
+                <div class="metric-icon-circle">🏢</div>
+              </div>
+              <div class="metric-value" id="suppTotalCount">০ জন</div>
+              <span class="metric-hint">নিবন্ধিত মহাজন</span>
+            </div>
+            <div class="metric-card card-expense">
+              <div class="metric-card-top">
+                <span class="metric-label">মোট মাল ক্রয়</span>
+                <div class="metric-icon-circle">📦</div>
+              </div>
+              <div class="metric-value" id="suppTotalPurchases">৳ ০</div>
+              <span class="metric-hint">সর্বমোট কেনাকাটা</span>
+            </div>
+            <div class="metric-card card-danger">
+              <div class="metric-card-top">
+                <span class="metric-label">মোট মহাজন দেনা (আমি দেব)</span>
+                <div class="metric-icon-circle">⚠️</div>
+              </div>
+              <div class="metric-value" id="suppTotalPayable">৳ ০</div>
+              <span class="metric-hint">পরিশোধযোগ্য বকেয়া</span>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 1.25rem;">
+            <div class="card-header">
+              <span class="card-title">সাপ্লায়ার / মহাজনদের তালিকা</span>
+              <input type="text" id="suppSearchInput" class="form-control" placeholder="মহাজন নাম বা ফোন..." oninput="App.renderSuppliersList()" style="width: 240px; font-size: 0.88rem;">
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">#</th>
+                      <th>মহাজন নাম</th>
+                      <th>মোবাইল নম্বর</th>
+                      <th>কোম্পানি / ঠিকানা</th>
+                      <th style="text-align: right;">মোট ক্রয়</th>
+                      <th style="text-align: right;">পরিশোধ</th>
+                      <th style="text-align: right;">বর্তমান দেনা</th>
+                      <th style="text-align: center;">অ্যাকশন</th>
+                    </tr>
+                  </thead>
+                  <tbody id="suppliersTableBody">
+                    <tr><td colspan="8" style="text-align: center; color: #94A3B8; padding: 2rem;">কোন মহাজন পাওয়া যায়নি</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             13. CASH & BANK ACCOUNTS VIEW
+             ========================================== -->
+        <section id="view-accounts" class="app-view">
+          <div class="view-header-row">
+            <div>
+              <h2 class="view-title">💳 ক্যাশ, ব্যাংক ও ওয়ালেট হিসাব</h2>
+              <p class="view-subtitle">বিভিন্ন আর্থিক একাউন্টের ব্যালেন্স ট্র্যাকিং ও ফান্ড ট্রান্সফার</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="App.openTransferModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 16 5 5 5-5"/><path d="M12 21V3"/><path d="m17 8-5-5-5 5"/></svg>
+                <span>🔁 ফান্ড ট্রান্সফার</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Accounts Grid -->
+          <div class="accounts-overview-strip" id="accountsViewGrid">
+            <!-- Populated via JS -->
+          </div>
+
+          <!-- Transfer / Movement History -->
+          <div class="card" style="margin-top: 1.25rem;">
+            <div class="card-header">
+              <span class="card-title">টাকা স্থানান্তর ও লেনদেনের ইতিহাস</span>
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">#</th>
+                      <th>তারিখ</th>
+                      <th>বিবরণ</th>
+                      <th>মাধ্যম / একাউন্ট</th>
+                      <th style="text-align: right;">পরিমাণ</th>
+                      <th>নোট / রেফারেন্স</th>
+                    </tr>
+                  </thead>
+                  <tbody id="accountsTransfersTableBody">
+                    <tr><td colspan="6" style="text-align: center; color: #94A3B8; padding: 2rem;">কোন স্থানান্তর ইতিহাস নেই</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             14. FAMILY FINANCE VIEW
+             ========================================== -->
+        <section id="view-family" class="app-view">
+          <div class="view-header-row">
+            <div>
+              <h2 class="view-title">🏠 পারিবারিক হিসাব ও সংসার খরচ</h2>
+              <p class="view-subtitle">পারিবারিক আয়, বাজার-সদাই, বাসা ভাড়া ও সংসার খরচের পৃথক হিসাব</p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="App.openAddTransactionModal('EXPENSE_HOUSE')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>- সংসার খরচ যোগ</span>
+              </button>
+              <button class="btn btn-success" onclick="App.openAddTransactionModal('INCOME', false, true)">
+                <span>+ পরিবারে আয় যোগ</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card card-income">
+              <div class="metric-card-top">
+                <span class="metric-label">পারিবারিক আয়</span>
+                <div class="metric-icon-circle">🏡</div>
+              </div>
+              <div class="metric-value" id="familyTotalIncome">৳ ০</div>
+              <span class="metric-hint">বেতন, ফ্রিল্যান্সিং, ব্যবসা হতে ড্র</span>
+            </div>
+            <div class="metric-card card-expense">
+              <div class="metric-card-top">
+                <span class="metric-label">সংসার খরচ</span>
+                <div class="metric-icon-circle">🛒</div>
+              </div>
+              <div class="metric-value" id="familyTotalExpenses">৳ ০</div>
+              <span class="metric-hint">বাজার, ভাড়া, চিকিৎসা, বিল</span>
+            </div>
+            <div class="metric-card card-profit">
+              <div class="metric-card-top">
+                <span class="metric-label">নিট পারিবারিক সঞ্চয়</span>
+                <div class="metric-icon-circle">💰</div>
+              </div>
+              <div class="metric-value" id="familyNetSavings">৳ ০</div>
+              <span class="metric-hint">আয় হতে খরচ বাদে জমা</span>
+            </div>
+          </div>
+
+          <!-- Family Expense Breakdown Chart & List -->
+          <div class="dashboard-charts-grid" style="margin-top: 1.25rem;">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">সংসার খরচের ক্যাটাগরি বিশ্লেষণ</span>
+              </div>
+              <div class="card-body">
+                <div style="height: 240px; position: relative;">
+                  <canvas id="familyExpenseDonutChart" style="width: 100%; height: 100%;"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">সাম্প্রতিক সংসার খরচসমূহ</span>
+                <button class="btn btn-secondary btn-sm" onclick="navigateView('transactions')">সব দেখুন</button>
+              </div>
+              <div class="card-body" style="padding: 0;">
+                <div class="tx-list-container" id="familyRecentTxList">
+                  <div class="empty-state-box" style="padding: 2rem;">সংসার খরচের হিসাব পাওয়া যায়নি</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </main>
 
     </div>
 
   </div>
 
-  <!-- Mobile Floating Action Button (FAB) -->
-  <button class="mobile-fab-btn" onclick="App.openAddTransactionModal()" title="নতুন হিসাব যোগ করুন">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-  </button>
 
-  <!-- Mobile Bottom Navigation Bar (প্রিমিয়াম ফ্লোটিং টাচ বার) -->
+  <!-- Mobile Bottom Navigation Bar (5 Items with elevated center + FAB) -->
   <nav class="mobile-bottom-nav">
     <button class="bottom-nav-item active" data-view="dashboard" onclick="navigateView('dashboard')" title="ড্যাশবোর্ড">
       <div class="bottom-nav-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
       </div>
-      <span class="bottom-nav-label">ড্যাশবোর্ড</span>
+      <span class="bottom-nav-label">হোম</span>
     </button>
 
     <button class="bottom-nav-item" data-view="transactions" onclick="navigateView('transactions')" title="লেনদেন তালিকা">
       <div class="bottom-nav-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       </div>
-      <span class="bottom-nav-label">খতিয়ান</span>
+      <span class="bottom-nav-label">হিসাব</span>
     </button>
 
-    <button class="bottom-nav-item" data-view="debts" onclick="navigateView('debts')" title="ধার-বাকি খাতা">
-      <div class="bottom-nav-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
-      </div>
-      <span class="bottom-nav-label">বাকি খাতা</span>
+    <!-- Center Floating Action Button (Quick Add) -->
+    <button type="button" class="bottom-nav-fab" onclick="App.openQuickAddModal()" title="দ্রুত হিসাব এন্ট্রি (+)">
+      +
     </button>
 
     <button class="bottom-nav-item" data-view="reports" onclick="navigateView('reports')" title="হিসাব রিপোর্ট">
@@ -1394,11 +1914,422 @@
 
     <button class="bottom-nav-item" data-view="settings" onclick="navigateView('settings')" title="সেটিংস ও প্রোফাইল">
       <div class="bottom-nav-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </div>
       <span class="bottom-nav-label">সেটিংস</span>
     </button>
   </nav>
+
+  <!-- ==========================================
+       MODALS SYSTEM
+       ========================================== -->
+
+  <!-- 0. QUICK ADD SYSTEM MODAL (8 Instant Shortcuts) -->
+  <div id="quickAddModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('quickAddModal')"></div>
+    <div class="modal-dialog" style="max-width: 540px;">
+      <div class="modal-header">
+        <span class="modal-title">⚡ দ্রুত হিসাব এন্ট্রি (Quick Add)</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('quickAddModal')">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem;">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem; text-align: center;">আপনি কোন হিসাবটি যোগ করতে চান নির্বাচন করুন:</p>
+        <div class="quick-add-grid">
+          <!-- 1. Sale -->
+          <button type="button" class="quick-add-item qa-sale" onclick="UI.closeModal('quickAddModal'); App.openPOSSaleModal();">
+            <div class="quick-add-icon-circle">🛒</div>
+            <span class="quick-add-label">+ বিক্রি (Sale)</span>
+            <span class="quick-add-subtext">কাস্টমার পিওএস বিক্রি</span>
+          </button>
+
+          <!-- 2. Income -->
+          <button type="button" class="quick-add-item qa-income" onclick="UI.closeModal('quickAddModal'); App.openAddTransactionModal('INCOME');">
+            <div class="quick-add-icon-circle">💰</div>
+            <span class="quick-add-label">+ আয় (Income)</span>
+            <span class="quick-add-subtext">দোকান বা পারিবারিক আয়</span>
+          </button>
+
+          <!-- 3. Expense -->
+          <button type="button" class="quick-add-item qa-expense" onclick="UI.closeModal('quickAddModal'); App.openAddTransactionModal('EXPENSE_SHOP');">
+            <div class="quick-add-icon-circle">💸</div>
+            <span class="quick-add-label">- খরচ (Expense)</span>
+            <span class="quick-add-subtext">দোকান বা সংসার খরচ</span>
+          </button>
+
+          <!-- 4. Purchase -->
+          <button type="button" class="quick-add-item qa-purchase" onclick="UI.closeModal('quickAddModal'); App.openPurchaseModal();">
+            <div class="quick-add-icon-circle">📦</div>
+            <span class="quick-add-label">+ মাল ক্রয়</span>
+            <span class="quick-add-subtext">মহাজন থেকে স্টক কেনা</span>
+          </button>
+
+          <!-- 5. Customer Payment -->
+          <button type="button" class="quick-add-item qa-custpay" onclick="UI.closeModal('quickAddModal'); App.openCustomerPaymentModal();">
+            <div class="quick-add-icon-circle">📥</div>
+            <span class="quick-add-label">কাস্টমার জমা</span>
+            <span class="quick-add-subtext">বকেয়া বাকি আদায়</span>
+          </button>
+
+          <!-- 6. Supplier Payment -->
+          <button type="button" class="quick-add-item qa-supppay" onclick="UI.closeModal('quickAddModal'); App.openSupplierPaymentModal();">
+            <div class="quick-add-icon-circle">📤</div>
+            <span class="quick-add-label">মহাজন পরিশোধ</span>
+            <span class="quick-add-subtext">সাপ্লায়ার পাওনা প্রদান</span>
+          </button>
+
+          <!-- 7. Transfer -->
+          <button type="button" class="quick-add-item qa-transfer" onclick="UI.closeModal('quickAddModal'); App.openTransferModal();">
+            <div class="quick-add-icon-circle">🔁</div>
+            <span class="quick-add-label">টাকা ট্রান্সফার</span>
+            <span class="quick-add-subtext">ক্যাশ ↔ ব্যাংক ↔ বিকাশ</span>
+          </button>
+
+          <!-- 8. Debt -->
+          <button type="button" class="quick-add-item qa-debt" onclick="UI.closeModal('quickAddModal'); App.openNewDebtModal();">
+            <div class="quick-add-icon-circle">📝</div>
+            <span class="quick-add-label">ধার-বাকি</span>
+            <span class="quick-add-subtext">নতুন দেনা বা পাওনা</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.1 GLOBAL SEARCH MODAL (Ctrl+K) -->
+  <div id="globalSearchModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('globalSearchModal')"></div>
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <span class="modal-title">🔍 গ্লোবাল অনুসন্ধান (সার্চ)</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('globalSearchModal')">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem;">
+        <div class="search-input-wrap">
+          <span class="search-input-icon">🔍</span>
+          <input type="text" id="globalSearchInputField" placeholder="কাস্টমার, মহাজন, পণ্য, চালান বা লেনদেন খুঁজুন..." oninput="App.executeGlobalSearch(this.value)">
+        </div>
+        <div class="search-results-list" id="globalSearchResultsContainer">
+          <p style="text-align: center; color: var(--text-muted); padding: 1.5rem 0;">খুঁজতে যেকোনো শব্দ বা নাম টাইপ করুন...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.2 POS SALE MODAL (Professional POS Screen) -->
+  <div id="posSaleModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('posSaleModal')"></div>
+    <div class="modal-dialog modal-lg" style="max-width: 780px;">
+      <div class="modal-header">
+        <span class="modal-title">🛒 নতুন পিওএস বিক্রি (POS Sale)</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('posSaleModal')">✕</button>
+      </div>
+      <form id="posSaleForm" onsubmit="App.handleSavePOSSale(event)">
+        <div class="modal-body" style="padding: 1.25rem;">
+          <!-- Top Row: Customer and Date -->
+          <div class="form-row" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 220px;">
+              <label class="form-label required">কাস্টমার নাম</label>
+              <input type="text" id="posCustomerInput" class="form-control" placeholder="কাস্টমারের নাম লিখুন বা নির্বাচন করুন" list="customersDatalist" required oninput="App.onPOSCustomerChange(this.value)">
+              <datalist id="customersDatalist"></datalist>
+            </div>
+            <div class="form-group" style="width: 170px;">
+              <label class="form-label">মোবাইল নম্বর</label>
+              <input type="tel" id="posCustomerPhone" class="form-control" placeholder="০১৭১১-০০০০০০">
+            </div>
+            <div class="form-group" style="width: 160px;">
+              <label class="form-label required">তারিখ</label>
+              <input type="date" id="posSaleDate" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Customer Old Due Alert Badge if any -->
+          <div id="posCustomerDueAlert" class="smart-due-alert has-due" style="display: none; margin-bottom: 1rem;"></div>
+
+          <!-- Products Table -->
+          <div style="margin: 1rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <strong style="font-size: 0.92rem; color: var(--text-main);">বিক্রিত পণ্যের তালিকা:</strong>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="App.addPOSItemRow()">+ পণ্য যোগ করুন</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" style="font-size: 0.88rem;">
+                <thead>
+                  <tr style="background: var(--bg-surface-alt);">
+                    <th>পণ্যের নাম</th>
+                    <th style="width: 90px; text-align: center;">পরিমাণ</th>
+                    <th style="width: 110px; text-align: right;">দর (৳)</th>
+                    <th style="width: 120px; text-align: right;">মোট (৳)</th>
+                    <th style="width: 40px; text-align: center;"></th>
+                  </tr>
+                </thead>
+                <tbody id="posItemsBody">
+                  <!-- Dynamic rows via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Totals Calculation Box -->
+          <div style="background: var(--bg-surface-alt); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 1rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem;">
+              <div>
+                <label class="form-label">পণ্যের উপমোট (Subtotal)</label>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);" id="posSubtotalDisplay">৳ ০</div>
+              </div>
+              <div>
+                <label class="form-label">ছাড় / ডিসকাউন্ট (৳)</label>
+                <input type="number" id="posDiscountInput" class="form-control" value="0" min="0" step="any" oninput="App.recalcPOSTotals()">
+              </div>
+              <div>
+                <label class="form-label">সর্বমোট পাওনা (Total)</label>
+                <div style="font-size: 1.25rem; font-weight: 900; color: var(--primary-700);" id="posTotalDisplay">৳ ০</div>
+              </div>
+              <div>
+                <label class="form-label required">নগদ জমা / পেইড (৳)</label>
+                <input type="number" id="posPaidInput" class="form-control" value="0" min="0" step="any" required oninput="App.recalcPOSTotals()">
+              </div>
+              <div>
+                <label class="form-label">বর্তমান বাকি (Due)</label>
+                <div style="font-size: 1.15rem; font-weight: 800; color: #DC2626;" id="posDueDisplay">৳ ০</div>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top: 0.85rem; display: flex; gap: 1rem;">
+              <div class="form-group" style="flex: 1;">
+                <label class="form-label">জমা মাধ্যম / একাউন্ট</label>
+                <select id="posPaymentMethodSelect" class="form-select">
+                  <option value="Cash">💵 নগদ ক্যাশ (Cash)</option>
+                  <option value="bKash">📱 বিকাশ ওয়ালেট (bKash)</option>
+                  <option value="Nagad">📲 নগদ ওয়ালেট (Nagad)</option>
+                  <option value="Bank">🏛️ ব্যাংক একাউন্ট (Bank)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 2;">
+                <label class="form-label">নোট / বিবরণ</label>
+                <input type="text" id="posNoteInput" class="form-control" placeholder="যেমন: বিশেষ কাস্টমার অর্ডার">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between;">
+          <button type="button" class="btn btn-secondary" onclick="UI.closeModal('posSaleModal')">বাতিল</button>
+          <button type="submit" class="btn btn-success" style="font-size: 1rem; padding: 0.65rem 1.5rem;">
+            ✓ বিক্রি সম্পন্ন করুন ও চালান প্রিন্ট
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 0.3 PURCHASE MODAL (Inventory Restock) -->
+  <div id="purchaseModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('purchaseModal')"></div>
+    <div class="modal-dialog modal-lg" style="max-width: 750px;">
+      <div class="modal-header">
+        <span class="modal-title">📦 মালামাল ক্রয় চালান (Purchase Entry)</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('purchaseModal')">✕</button>
+      </div>
+      <form id="purchaseForm" onsubmit="App.handleSavePurchase(event)">
+        <div class="modal-body" style="padding: 1.25rem;">
+          <div class="form-row" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 220px;">
+              <label class="form-label required">মহাজন / সাপ্লায়ার নাম</label>
+              <input type="text" id="purchaseSupplierInput" class="form-control" placeholder="সাপ্লায়ার নাম লিখুন বা নির্বাচন করুন" list="suppliersDatalist" required>
+              <datalist id="suppliersDatalist"></datalist>
+            </div>
+            <div class="form-group" style="width: 170px;">
+              <label class="form-label">চালান নং</label>
+              <input type="text" id="purchaseInvoiceNo" class="form-control" placeholder="ঐচ্ছিক (যেমন: INV-45)">
+            </div>
+            <div class="form-group" style="width: 160px;">
+              <label class="form-label required">তারিখ</label>
+              <input type="date" id="purchaseDate" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Purchased Items -->
+          <div style="margin: 1rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <strong style="font-size: 0.92rem; color: var(--text-main);">ক্রয়কৃত পণ্যের বিবরণ:</strong>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="App.addPurchaseItemRow()">+ পণ্য যোগ করুন</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" style="font-size: 0.88rem;">
+                <thead>
+                  <tr style="background: var(--bg-surface-alt);">
+                    <th>পণ্যের নাম</th>
+                    <th style="width: 90px; text-align: center;">পরিমাণ</th>
+                    <th style="width: 110px; text-align: right;">ক্রয় দর (৳)</th>
+                    <th style="width: 120px; text-align: right;">মোট (৳)</th>
+                    <th style="width: 40px; text-align: center;"></th>
+                  </tr>
+                </thead>
+                <tbody id="purchaseItemsBody">
+                  <!-- Dynamic rows via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-surface-alt); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem;">
+              <div>
+                <label class="form-label">সর্বমোট বিল (৳)</label>
+                <div style="font-size: 1.2rem; font-weight: 800;" id="purchaseTotalDisplay">৳ ০</div>
+              </div>
+              <div>
+                <label class="form-label required">নগদ পরিশোধ (৳)</label>
+                <input type="number" id="purchasePaidInput" class="form-control" value="0" min="0" step="any" required oninput="App.recalcPurchaseTotals()">
+              </div>
+              <div>
+                <label class="form-label">মহাজন দেনা / বাকি (৳)</label>
+                <div style="font-size: 1.2rem; font-weight: 800; color: #DC2626;" id="purchaseDueDisplay">৳ ০</div>
+              </div>
+              <div>
+                <label class="form-label">পরিশোধের মাধ্যম</label>
+                <select id="purchasePaymentMethodSelect" class="form-select">
+                  <option value="Cash">💵 নগদ ক্যাশ</option>
+                  <option value="Bank">🏛️ ব্যাংক</option>
+                  <option value="bKash">📱 বিকাশ</option>
+                  <option value="Nagad">📲 নগদ</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between;">
+          <button type="button" class="btn btn-secondary" onclick="UI.closeModal('purchaseModal')">বাতিল</button>
+          <button type="submit" class="btn btn-warning" style="font-size: 1rem; padding: 0.65rem 1.5rem;">
+            ✓ ক্রয় চালান সংরক্ষণ করুন
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 0.4 FUND TRANSFER MODAL (Account-to-Account) -->
+  <div id="transferModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('transferModal')"></div>
+    <div class="modal-dialog" style="max-width: 480px;">
+      <div class="modal-header">
+        <span class="modal-title">🔁 আর্থিক ফান্ড ট্রান্সফার</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('transferModal')">✕</button>
+      </div>
+      <form id="transferForm" onsubmit="App.handleSaveTransfer(event)">
+        <div class="modal-body" style="padding: 1.25rem;">
+          <p style="font-size: 0.82rem; color: #059669; margin-bottom: 1rem; background: #ECFDF5; padding: 8px 12px; border-radius: 6px;">
+            ℹ️ ট্রান্সফার লেনদেন আয় বা ব্যয় হিসেবে গণ্য হয় না। এটি কেবল এক একাউন্ট হতে অন্য একাউন্টে স্থানান্তর করে।
+          </p>
+          <div class="form-group">
+            <label class="form-label required">যে একাউন্ট হতে যাবে (From)</label>
+            <select id="transferFromSelect" class="form-select" required>
+              <option value="Cash">💵 নগদ ক্যাশ (Cash)</option>
+              <option value="Bank">🏛️ ব্যাংক একাউন্ট (Bank)</option>
+              <option value="bKash">📱 বিকাশ ওয়ালেট (bKash)</option>
+              <option value="Nagad">📲 নগদ ওয়ালেট (Nagad)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">যে একাউন্টে জমা হবে (To)</label>
+            <select id="transferToSelect" class="form-select" required>
+              <option value="Bank">🏛️ ব্যাংক একাউন্ট (Bank)</option>
+              <option value="Cash">💵 নগদ ক্যাশ (Cash)</option>
+              <option value="bKash">📱 বিকাশ ওয়ালেট (bKash)</option>
+              <option value="Nagad">📲 নগদ ওয়ালেট (Nagad)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">টাকার পরিমাণ (৳)</label>
+            <input type="text" id="transferAmountInput" class="form-control" placeholder="যেমন: 10000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">তারিখ</label>
+            <input type="date" id="transferDateInput" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">রেফারেন্স / নোট</label>
+            <input type="text" id="transferNoteInput" class="form-control" placeholder="যেমন: ব্যাংক ডিপোজিট স্লিপ নং #১২৩">
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between;">
+          <button type="button" class="btn btn-secondary" onclick="UI.closeModal('transferModal')">বাতিল</button>
+          <button type="submit" class="btn btn-primary">✓ ট্রান্সফার সম্পন্ন করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 0.5 CUSTOMER MODAL (Add/Edit Customer) -->
+  <div id="customerModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('customerModal')"></div>
+    <div class="modal-dialog" style="max-width: 480px;">
+      <div class="modal-header">
+        <span class="modal-title" id="customerModalTitle">কাস্টমার তথ্য যোগ করুন</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('customerModal')">✕</button>
+      </div>
+      <form id="customerForm" onsubmit="App.handleSaveCustomer(event)">
+        <div class="modal-body" style="padding: 1.25rem;">
+          <input type="hidden" id="customerId">
+          <div class="form-group">
+            <label class="form-label required">কাস্টমারের নাম</label>
+            <input type="text" id="custNameInput" class="form-control" placeholder="কাস্টমারের পূর্ণ নাম" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">মোবাইল নম্বর</label>
+            <input type="tel" id="custPhoneInput" class="form-control" placeholder="০১৭০০-০০০০০০">
+          </div>
+          <div class="form-group">
+            <label class="form-label">ঠিকানা / এলাকা</label>
+            <input type="text" id="custAddressInput" class="form-control" placeholder="যেমন: মিরপুর-১০, ঢাকা">
+          </div>
+          <div class="form-group">
+            <label class="form-label">প্রারম্ভিক বকেয়া বাকি (যদি থাকে)</label>
+            <input type="number" id="custOpeningDueInput" class="form-control" value="0" min="0" step="any">
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between;">
+          <button type="button" class="btn btn-secondary" onclick="UI.closeModal('customerModal')">বাতিল</button>
+          <button type="submit" class="btn btn-primary">✓ কাস্টমার সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 0.6 SUPPLIER MODAL (Add/Edit Supplier) -->
+  <div id="supplierModal" class="khata-modal">
+    <div class="modal-backdrop" onclick="UI.closeModal('supplierModal')"></div>
+    <div class="modal-dialog" style="max-width: 480px;">
+      <div class="modal-header">
+        <span class="modal-title" id="supplierModalTitle">সাপ্লায়ার / মহাজন তথ্য</span>
+        <button class="btn-close-modal" onclick="UI.closeModal('supplierModal')">✕</button>
+      </div>
+      <form id="supplierForm" onsubmit="App.handleSaveSupplier(event)">
+        <div class="modal-body" style="padding: 1.25rem;">
+          <input type="hidden" id="supplierId">
+          <div class="form-group">
+            <label class="form-label required">মহাজন / সরবরাহকারীর নাম</label>
+            <input type="text" id="suppNameInput" class="form-control" placeholder="যেমন: মেসার্স সিটি ট্রেডার্স" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">মোবাইল নম্বর</label>
+            <input type="tel" id="suppPhoneInput" class="form-control" placeholder="০১৭১১-০০০০০০">
+          </div>
+          <div class="form-group">
+            <label class="form-label">কোম্পানি / আড়ত ঠিকানা</label>
+            <input type="text" id="suppAddressInput" class="form-control" placeholder="যেমন: বাদামতলী ঘাট, ঢাকা">
+          </div>
+          <div class="form-group">
+            <label class="form-label">প্রারম্ভিক বকেয়া দেনা (যদি থাকে)</label>
+            <input type="number" id="suppOpeningDueInput" class="form-control" value="0" min="0" step="any">
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between;">
+          <button type="button" class="btn btn-secondary" onclick="UI.closeModal('supplierModal')">বাতিল</button>
+          <button type="submit" class="btn btn-warning">✓ সাপ্লায়ার সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ==========================================
        MODALS SYSTEM

@@ -1,5 +1,5 @@
-// Service Worker for Khata PWA
-const CACHE_NAME = 'khata-cache-v1.0.3';
+// Service Worker for RI Family & Business Hisab PWA
+const CACHE_NAME = 'ri-hisab-cache-v2.0.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

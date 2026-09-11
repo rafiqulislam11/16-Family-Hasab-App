@@ -342,7 +342,8 @@
 }
 
 /* --- Metric Cards (Dashboard Top Summary) --- */
-.metric-grid {
+.metric-grid,
+.metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 0.85rem;
@@ -3203,3 +3204,291 @@
 .report-statement-table td {
   word-break: break-word;
 }
+
+/* ==========================================================================
+   RI Family & Business Hisab — Upgrade Component Styles
+   ========================================================================== */
+
+/* --- Context Switcher in Topbar --- */
+.context-switcher-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.06);
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  gap: 2px;
+}
+body.dark-theme .context-switcher-wrap {
+  background: rgba(255, 255, 255, 0.08);
+}
+.context-pill-btn {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+.context-pill-btn.active {
+  background: var(--primary-600);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+.context-pill-btn:hover:not(.active) {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-main);
+}
+body.dark-theme .context-pill-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Financial Accounts Overview Strip --- */
+.accounts-overview-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.account-strip-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--trans-fast), box-shadow var(--trans-fast);
+}
+.account-strip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.account-strip-meta {
+  display: flex;
+  flex-direction: column;
+}
+.account-strip-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.account-strip-amount {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 2px;
+}
+.account-strip-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-50);
+  color: var(--primary-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+/* --- Quick Add Action Grid --- */
+.quick-add-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+}
+@media (max-width: 640px) {
+  .quick-add-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+.quick-add-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0.75rem;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  width: 100%;
+}
+.quick-add-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  background: var(--bg-surface);
+  border-color: var(--primary-500);
+}
+.quick-add-icon-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+  box-shadow: var(--shadow-xs);
+}
+.quick-add-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.quick-add-subtext {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Color variations for Quick Add icons */
+.qa-sale .quick-add-icon-circle { background: #ECFDF5; color: #059669; }
+.qa-income .quick-add-icon-circle { background: #EFF6FF; color: #2563EB; }
+.qa-expense .quick-add-icon-circle { background: #FEF2F2; color: #DC2626; }
+.qa-purchase .quick-add-icon-circle { background: #FFFBEB; color: #D97706; }
+.qa-custpay .quick-add-icon-circle { background: #F0FDF4; color: #16A34A; }
+.qa-supppay .quick-add-icon-circle { background: #FEF3C7; color: #B45309; }
+.qa-transfer .quick-add-icon-circle { background: #F5F3FF; color: #7C3AED; }
+.qa-debt .quick-add-icon-circle { background: #F1F5F9; color: #475569; }
+
+/* --- Mobile Bottom Navigation Center Button (+) --- */
+.bottom-nav-fab {
+  position: relative;
+  top: -14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1E40AF, #2563EB);
+  color: #FFFFFF;
+  border: 4px solid var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+  transition: transform var(--trans-fast);
+}
+.bottom-nav-fab:active {
+  transform: scale(0.92);
+}
+
+/* --- Undo Toast Notification --- */
+.toast-undo {
+  background: #1E293B !important;
+  color: #F8FAFC !important;
+  border-left: 5px solid #F59E0B !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.btn-undo-action {
+  background: #F59E0B;
+  color: #0F172A;
+  border: none;
+  font-weight: 800;
+  font-size: 0.84rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-undo-action:hover {
+  background: #FBBF24;
+}
+
+/* --- Stock Status Badges --- */
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.stock-badge.in-stock {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+.stock-badge.low-stock {
+  background: #FFFBEB;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.stock-badge.out-of-stock {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+/* --- Global Search Modal --- */
+.search-input-wrap {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+.search-input-wrap input {
+  width: 100%;
+  padding: 0.85rem 1.25rem 0.85rem 2.85rem;
+  font-size: 1.05rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--primary-500);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  outline: none;
+}
+.search-input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.search-results-list {
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.search-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+.search-result-item:hover {
+  background: var(--bg-surface);
+  border-color: var(--primary-400);
+  transform: translateX(4px);
+}
+.search-result-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+

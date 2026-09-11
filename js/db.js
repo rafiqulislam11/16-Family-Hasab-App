@@ -1,10 +1,12 @@
 /**
- * খাতা — IndexedDB Storage Engine (KhataDB)
- * 8 Object Stores: transactions, categories, debts, debtPayments, budgets, savingGoals, settings, appProfile
+ * RI Family & Business Hisab — IndexedDB Storage Engine (KhataDB)
+ * 20 Object Stores: transactions, categories, debts, debtPayments, budgets, savingGoals,
+ * settings, appProfile, accounts, products, dailyClosings, sales, saleItems, purchases,
+ * purchaseItems, customers, suppliers, stockMovements, financialAccounts, auditLogs
  */
 
 const DB_NAME = 'KhataDB_v2';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 class KhataDatabase {
   constructor() {
@@ -96,6 +98,77 @@ class KhataDatabase {
           const store = db.createObjectStore('dailyClosings', { keyPath: 'id' });
           store.createIndex('date', 'date', { unique: false });
           store.createIndex('accountId', 'accountId', { unique: false });
+        }
+
+        // 12. Sales (বিক্রি ও পিওএস চালান)
+        if (!db.objectStoreNames.contains('sales')) {
+          const store = db.createObjectStore('sales', { keyPath: 'id' });
+          store.createIndex('date', 'date', { unique: false });
+          store.createIndex('customerId', 'customerId', { unique: false });
+          store.createIndex('accountId', 'accountId', { unique: false });
+          store.createIndex('invoiceNo', 'invoiceNo', { unique: false });
+        }
+
+        // 13. Sale Items (বিক্রিত পণ্যের তালিকা)
+        if (!db.objectStoreNames.contains('saleItems')) {
+          const store = db.createObjectStore('saleItems', { keyPath: 'id' });
+          store.createIndex('saleId', 'saleId', { unique: false });
+          store.createIndex('productId', 'productId', { unique: false });
+        }
+
+        // 14. Purchases (মালামাল ক্রয় ও চালান)
+        if (!db.objectStoreNames.contains('purchases')) {
+          const store = db.createObjectStore('purchases', { keyPath: 'id' });
+          store.createIndex('date', 'date', { unique: false });
+          store.createIndex('supplierId', 'supplierId', { unique: false });
+          store.createIndex('accountId', 'accountId', { unique: false });
+          store.createIndex('purchaseNo', 'purchaseNo', { unique: false });
+        }
+
+        // 15. Purchase Items (ক্রয়কৃত পণ্যের তালিকা)
+        if (!db.objectStoreNames.contains('purchaseItems')) {
+          const store = db.createObjectStore('purchaseItems', { keyPath: 'id' });
+          store.createIndex('purchaseId', 'purchaseId', { unique: false });
+          store.createIndex('productId', 'productId', { unique: false });
+        }
+
+        // 16. Customers (কাস্টমার ডিরেক্টরি ও লেজার)
+        if (!db.objectStoreNames.contains('customers')) {
+          const store = db.createObjectStore('customers', { keyPath: 'id' });
+          store.createIndex('name', 'name', { unique: false });
+          store.createIndex('phone', 'phone', { unique: false });
+          store.createIndex('accountId', 'accountId', { unique: false });
+        }
+
+        // 17. Suppliers (মহাজন / সরবরাহকারী খাতা)
+        if (!db.objectStoreNames.contains('suppliers')) {
+          const store = db.createObjectStore('suppliers', { keyPath: 'id' });
+          store.createIndex('name', 'name', { unique: false });
+          store.createIndex('phone', 'phone', { unique: false });
+          store.createIndex('accountId', 'accountId', { unique: false });
+        }
+
+        // 18. Stock Movements (মজুত হ্রাস-বৃদ্ধির ট্র্যাকিং)
+        if (!db.objectStoreNames.contains('stockMovements')) {
+          const store = db.createObjectStore('stockMovements', { keyPath: 'id' });
+          store.createIndex('productId', 'productId', { unique: false });
+          store.createIndex('date', 'date', { unique: false });
+          store.createIndex('type', 'type', { unique: false });
+          store.createIndex('accountId', 'accountId', { unique: false });
+        }
+
+        // 19. Financial Accounts (ক্যাশ, ব্যাংক ও মোবাইল ওয়ালেট হিসাব)
+        if (!db.objectStoreNames.contains('financialAccounts')) {
+          const store = db.createObjectStore('financialAccounts', { keyPath: 'id' });
+          store.createIndex('type', 'type', { unique: false });
+          store.createIndex('accountId', 'accountId', { unique: false });
+        }
+
+        // 20. Audit Logs (অ্যাক্টিভিটি ও অডিট লগ)
+        if (!db.objectStoreNames.contains('auditLogs')) {
+          const store = db.createObjectStore('auditLogs', { keyPath: 'id' });
+          store.createIndex('date', 'date', { unique: false });
+          store.createIndex('action', 'action', { unique: false });
         }
       };
 
@@ -322,6 +395,68 @@ class KhataDatabase {
     const txList = await this.getAll('transactions');
     if (txList.length === 0) {
       await this.seedSampleData();
+    }
+
+    // Seed Financial Accounts (Cash, Bank, Mobile Banking)
+    const finAccounts = await this.getAll('financialAccounts');
+    if (finAccounts.length === 0) {
+      const defaultFinAccounts = [
+        { id: 'acc_cash', name: 'নগদ ক্যাশ (Cash in Hand)', type: 'CASH', icon: '💵', balance: 45000, isDefault: true, accountId: 'acc_rafiqul_main' },
+        { id: 'acc_bank', name: 'ব্যাংক হিসাব (Main Bank)', type: 'BANK', icon: '🏛️', balance: 80000, bankName: 'সোনালী ব্যাংক পিএলসি', isDefault: false, accountId: 'acc_rafiqul_main' },
+        { id: 'acc_bkash', name: 'বিকাশ ওয়ালেট (bKash)', type: 'MOBILE_BANKING', icon: '📱', balance: 15000, isDefault: false, accountId: 'acc_rafiqul_main' },
+        { id: 'acc_nagad', name: 'নগদ ওয়ালেট (Nagad)', type: 'MOBILE_BANKING', icon: '📲', balance: 10000, isDefault: false, accountId: 'acc_rafiqul_main' },
+        { id: 'acc_rocket', name: 'রকেট ওয়ালেট (Rocket)', type: 'MOBILE_BANKING', icon: '🚀', balance: 0, isDefault: false, accountId: 'acc_rafiqul_main' }
+      ];
+      for (const a of defaultFinAccounts) {
+        await this.put('financialAccounts', a);
+      }
+    }
+
+    // Auto-migrate Customers & Suppliers from Debts if stores are empty
+    const customers = await this.getAll('customers');
+    const debts = await this.getAll('debts');
+    if (customers.length === 0 && debts.length > 0) {
+      const custMap = {};
+      const suppMap = {};
+      for (const d of debts) {
+        const name = (d.person || '').trim();
+        if (!name) continue;
+        if (d.type === 'RECEIVABLE' && !custMap[name.toLowerCase()]) {
+          custMap[name.toLowerCase()] = {
+            id: Utils.generateId('cust'),
+            name: name,
+            phone: d.phone || '',
+            address: '',
+            totalSales: Number(d.amount) || 0,
+            totalPaid: Number(d.paidAmount) || 0,
+            currentDue: Number(d.remainingAmount !== undefined ? d.remainingAmount : (d.amount - (d.paidAmount || 0))) || 0,
+            dueDate: d.dueDate || '',
+            note: d.note || '',
+            accountId: d.accountId || 'acc_rafiqul_main',
+            createdAt: d.createdAt || new Date().toISOString()
+          };
+        } else if (d.type === 'PAYABLE' && !suppMap[name.toLowerCase()]) {
+          suppMap[name.toLowerCase()] = {
+            id: Utils.generateId('supp'),
+            name: name,
+            phone: d.phone || '',
+            address: '',
+            totalPurchase: Number(d.amount) || 0,
+            totalPaid: Number(d.paidAmount) || 0,
+            currentPayable: Number(d.remainingAmount !== undefined ? d.remainingAmount : (d.amount - (d.paidAmount || 0))) || 0,
+            dueDate: d.dueDate || '',
+            note: d.note || '',
+            accountId: d.accountId || 'acc_rafiqul_main',
+            createdAt: d.createdAt || new Date().toISOString()
+          };
+        }
+      }
+      for (const c of Object.values(custMap)) {
+        await this.put('customers', c);
+      }
+      for (const s of Object.values(suppMap)) {
+        await this.put('suppliers', s);
+      }
     }
   }
 
@@ -754,24 +889,32 @@ class KhataDatabase {
   }
 
   /**
-   * Export all data for backup
+   * Export all data for backup (All 20 stores)
    */
   async exportCompleteDatabase() {
-    const stores = ['transactions', 'categories', 'debts', 'debtPayments', 'budgets', 'savingGoals', 'settings', 'appProfile', 'accounts', 'products', 'dailyClosings'];
+    const stores = [
+      'transactions', 'categories', 'debts', 'debtPayments', 'budgets', 'savingGoals',
+      'settings', 'appProfile', 'accounts', 'products', 'dailyClosings',
+      'sales', 'saleItems', 'purchases', 'purchaseItems', 'customers', 'suppliers',
+      'stockMovements', 'financialAccounts', 'auditLogs'
+    ];
     const backup = {
-      version: '2.0',
+      appName: 'RI Family & Business Hisab',
+      version: '5.0',
       exportedAt: new Date().toISOString(),
       stores: {}
     };
 
     for (const s of stores) {
-      backup.stores[s] = await this.getAll(s);
+      if (this.db.objectStoreNames.contains(s)) {
+        backup.stores[s] = await this.getAll(s);
+      }
     }
     return backup;
   }
 
   /**
-   * Restore database from backup object
+   * Restore database from backup object safely
    */
   async restoreCompleteDatabase(backupObj) {
     if (!backupObj || !backupObj.stores) {
@@ -794,12 +937,63 @@ class KhataDatabase {
   }
 
   /**
+   * Log system/user activity to audit trail
+   */
+  async logAudit(action, description, recordId = null, user = 'রফিকুল ইসলাম') {
+    try {
+      if (!this.db || !this.db.objectStoreNames.contains('auditLogs')) return;
+      await this.put('auditLogs', {
+        id: Utils.generateId('log'),
+        date: new Date().toISOString(),
+        action,
+        description,
+        recordId,
+        user
+      });
+    } catch (e) {
+      console.warn('Audit log write error:', e);
+    }
+  }
+
+  /**
+   * Record immutable stock movement
+   */
+  async recordStockMovement({ productId, productName, type, qty, previousStock, newStock, unitPrice = 0, refType = '', refId = '', note = '', accountId = 'acc_rafiqul_main' }) {
+    try {
+      if (!this.db || !this.db.objectStoreNames.contains('stockMovements')) return;
+      await this.put('stockMovements', {
+        id: Utils.generateId('sm'),
+        productId,
+        productName,
+        type, // 'SALE', 'PURCHASE', 'STOCK_IN', 'STOCK_OUT', 'ADJUSTMENT'
+        qty: Number(qty) || 0,
+        previousStock: Number(previousStock) || 0,
+        newStock: Number(newStock) || 0,
+        unitPrice: Number(unitPrice) || 0,
+        refType,
+        refId,
+        note,
+        accountId,
+        date: Utils.getTodayDateString(),
+        createdAt: new Date().toISOString()
+      });
+    } catch (e) {
+      console.warn('Stock movement record error:', e);
+    }
+  }
+
+  /**
    * Reset all user records to empty or re-seed
    */
   async resetDatabase(seedDefaults = true) {
-    const stores = ['transactions', 'debts', 'debtPayments', 'budgets', 'savingGoals', 'products', 'dailyClosings'];
+    const stores = [
+      'transactions', 'debts', 'debtPayments', 'budgets', 'savingGoals', 'products', 'dailyClosings',
+      'sales', 'saleItems', 'purchases', 'purchaseItems', 'customers', 'suppliers', 'stockMovements', 'auditLogs'
+    ];
     for (const s of stores) {
-      await this.clear(s);
+      if (this.db.objectStoreNames.contains(s)) {
+        await this.clear(s);
+      }
     }
     if (seedDefaults) {
       await this.seedSampleData();

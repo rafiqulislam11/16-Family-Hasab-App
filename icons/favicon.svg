@@ -1,61 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <linearGradient id="khataCover" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563EB" />
-      <stop offset="50%" stop-color="#1D4ED8" />
-      <stop offset="100%" stop-color="#1E3A8A" />
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#1E40AF" />
     </linearGradient>
-    <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFE082" />
-      <stop offset="50%" stop-color="#FFC107" />
-      <stop offset="100%" stop-color="#FFA000" />
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
     </linearGradient>
-    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#EDE8DC" />
-      <stop offset="100%" stop-color="#FAF8F3" />
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
     </linearGradient>
-    <filter id="bookShadow" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#1E3A8A" flood-opacity="0.35"/>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.45"/>
     </filter>
   </defs>
-  <!-- Background Badge circle for app icon -->
-  <circle cx="256" cy="256" r="248" fill="#1E3A8A" />
+
+  <!-- Outer Rounded Shield / Badge -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#bgGrad)" filter="url(#glow)" />
   
-  <!-- Book Spine & Pages Layer -->
-  <g filter="url(#bookShadow)">
-    <!-- Back Cover / Pages -->
-    <path d="M 120 70 L 410 70 C 425 70, 435 80, 435 95 L 435 425 C 435 440, 425 450, 410 450 L 120 450 Z" fill="url(#pageGrad)" />
-    <!-- Page edges lines -->
-    <line x1="428" y1="85" x2="428" y2="435" stroke="#D1C7B7" stroke-width="2" />
-    <line x1="422" y1="85" x2="422" y2="435" stroke="#D1C7B7" stroke-width="2" />
-    
-    <!-- Main Khata Front Cover -->
-    <path d="M 100 60 L 395 60 C 412 60, 425 73, 425 90 L 425 420 C 425 437, 412 450, 395 450 L 100 450 C 85 450, 75 438, 75 420 L 75 90 C 75 73, 85 60, 100 60 Z" fill="url(#khataCover)" />
-    
-    <!-- Book Spine Band -->
-    <path d="M 75 60 L 125 60 L 125 450 L 75 450 C 80 440, 80 70, 75 60 Z" fill="#172554" />
-    
-    <!-- Gold Spine Stitches -->
-    <line x1="125" y1="60" x2="125" y2="450" stroke="#FFC107" stroke-width="3" stroke-dasharray="10 8" />
-    
-    <!-- Gold Ribbon Bookmark -->
-    <path d="M 235 60 L 235 220 L 255 195 L 275 220 L 275 60 Z" fill="url(#goldRibbon)" />
-    
-    <!-- Ornate Frame on Khata -->
-    <rect x="150" y="105" width="240" height="300" rx="12" fill="none" stroke="#FFD54F" stroke-width="3" stroke-opacity="0.75" />
-    <rect x="156" y="111" width="228" height="288" rx="8" fill="none" stroke="#FFD54F" stroke-width="1" stroke-opacity="0.45" />
+  <!-- Outer Ring Accent -->
+  <rect x="36" y="36" width="440" height="440" rx="100" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-opacity="0.6" />
 
-    <!-- Ruled Ledger Lines inside emblem -->
-    <line x1="175" y1="260" x2="365" y2="260" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.4" />
-    <line x1="175" y1="300" x2="365" y2="300" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.4" />
-    <line x1="175" y1="340" x2="365" y2="340" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.4" />
+  <!-- Inner Dynamic Accent Arc / Ring -->
+  <circle cx="256" cy="226" r="148" fill="none" stroke="url(#emeraldGrad)" stroke-width="6" stroke-dasharray="24 12" stroke-opacity="0.45" />
 
-    <!-- Center Icon Symbol: Taka Symbol & Bengali Book -->
-    <circle cx="270" cy="180" r="42" fill="#1E3A8A" stroke="#FFD54F" stroke-width="3" />
-    <!-- Taka ৳ Symbol -->
-    <text x="270" y="196" font-family="'Hind Siliguri', 'Noto Sans Bengali', Arial, sans-serif" font-size="46" font-weight="bold" fill="#FFE082" text-anchor="middle">৳</text>
-    
-    <!-- "সহজ খাতা" Text -->
-    <text x="270" y="380" font-family="'Hind Siliguri', 'Noto Sans Bengali', Arial, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">সহজ খাতা</text>
-  </g>
+  <!-- Hexagonal / Shield Core -->
+  <path d="M 256 90 L 376 156 L 376 296 L 256 364 L 136 296 L 136 156 Z" fill="#0B132B" fill-opacity="0.7" stroke="url(#goldGrad)" stroke-width="5" />
+
+  <!-- Brand RI Monogram -->
+  <!-- Letter R -->
+  <path d="M 172 170 L 228 170 C 252 170 266 182 266 200 C 266 216 254 228 234 231 L 268 284 L 244 284 L 214 236 L 194 236 L 194 284 L 172 284 Z M 194 188 L 194 218 L 226 218 C 238 218 245 211 245 203 C 245 194 238 188 226 188 Z" fill="#FFFFFF" />
+  
+  <!-- Letter I -->
+  <path d="M 286 170 L 334 170 L 334 188 L 321 188 L 321 266 L 334 266 L 334 284 L 286 284 L 286 266 L 299 266 L 299 188 L 286 188 Z" fill="url(#goldGrad)" />
+
+  <!-- Bengali Taka ৳ Emblem at Center Top -->
+  <circle cx="256" cy="125" r="22" fill="url(#emeraldGrad)" />
+  <text x="256" y="133" font-family="'Hind Siliguri', 'Noto Sans Bengali', Arial, sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">৳</text>
+
+  <!-- Brand Name Ribbon / Text at Bottom -->
+  <rect x="76" y="388" width="360" height="60" rx="30" fill="#0B132B" stroke="url(#goldGrad)" stroke-width="2" />
+  <text x="256" y="426" font-family="'Hind Siliguri', 'Anek Bangla', sans-serif" font-size="24" font-weight="800" fill="#F8FAFC" text-anchor="middle" letter-spacing="1.5">RI HISAB • হিসাব</text>
 </svg>
